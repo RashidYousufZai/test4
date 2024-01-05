@@ -29,6 +29,8 @@ import slider from "../../assets/slider (2).png";
 
 const MainPage = () => {
   const [sliderItem, setSliderItem] = useState(0);
+  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const [imag1, setimag1] = useState();
   const [showItem, setShowItem] = useState(true);
   const [userData, setUserData] = useState([]);
@@ -51,8 +53,24 @@ const MainPage = () => {
   const [pollOptions, setPollOptions] = useState([]);
   const [selectedOption, setSelectedOption] = useState(null);
   const [stories, setStories] = useState(null);
+  const [selectedImages, setSelectedImages] = useState([]);
+  const [selectedTitle, setSelectedTitle] = useState("");
+  const [Technology, setTechnology] = useState([]);
+
+  console.log(Technology);
 
   useEffect(() => {
+    axios
+      .get(`${API_URL}/article?category=Technology&status=online`)
+      .then((response) => {
+        // Handle the data as needed
+        setTechnology(response.data);
+        console.log(Technology);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error fetching articles:", error);
+      });
     // Fetch stories when the component mounts
     const fetchStories = async () => {
       try {
@@ -65,6 +83,13 @@ const MainPage = () => {
 
     fetchStories();
   }, []);
+
+  const sliderSettings = {
+    dots: true,
+    infinite: true,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
   useEffect(() => {
     axios
@@ -544,109 +569,87 @@ const MainPage = () => {
           <div className="main-page-technology-area">
             <div>
               <div className="main-page-technology-first-column">
-                <div
-                  style={{
-                    marginTop: "10px",
-                  }}
-                >
-                  <ImageCard
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: 400,
-                      height: "40px",
-                      borderRadius: 0,
-                    }}
-                    height="200px"
-                    width="100%"
-                    img={img4}
-                    text="iPhone 15, iPhone 15 Plus, iPhone 15 Pro, iPhone 15 Pro Max Preorders Be..."
-                  />
-                </div>
-                <div
-                  style={{
-                    marginTop: "10px",
-                  }}
-                >
-                  <ImageCard
-                    style={{
-                      fontSize: "15px",
-                      fontWeight: 400,
-                      height: "40px",
-                      borderRadius: 0,
-                    }}
-                    height="200px"
-                    width="100%"
-                    img={img3}
-                    text="iPhone 15, iPhone 15 Plus, iPhone 15 Pro, iPhone 15 Pro Max Preorders Be..."
-                  />
-                </div>
+                {Technology.slice(0, 2).map((techData, index) => (
+                  <div key={index} style={{ marginTop: "10px" }}>
+                    <ImageCard
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: 400,
+                        height: "40px",
+                        borderRadius: 0,
+                      }}
+                      height="200px"
+                      title={techData?.title}
+                      width="400px"
+                      id={techData?._id}
+                      img={techData?.image}
+                      text={techData?.title}
+                    />
+                  </div>
+                ))}
+
+                {console.log(Technology)}
               </div>
+
               <div className="main-page-technology-first-column">
-                <div
-                  style={{
-                    marginTop: "10px",
-                  }}
-                >
-                  <StoriesCard
-                    height="120px"
-                    width="80%"
-                    color="transparent"
-                    image={img5}
-                    text={
-                      "iPhone 15 price in India starts at Rs. 79,900 for the base model with 128GB of storage, while the iPhone 15 Plus with the same amount of storage starts at Rs. 89,900.."
-                    }
-                  />
-                </div>
-                <div
-                  style={{
-                    marginTop: "10px",
-                  }}
-                >
-                  <StoriesCard
-                    height="120px"
-                    width="80%"
-                    color="transparent"
-                    image={img5}
-                    text={
-                      "iPhone 15 price in India starts at Rs. 79,900 for the base model with 128GB of storage, while the iPhone 15 Plus with the same amount of storage starts at Rs. 89,900.."
-                    }
-                  />
-                </div>
-                <div
-                  style={{
-                    marginTop: "10px",
-                  }}
-                >
-                  <StoriesCard
-                    height="120px"
-                    width="80%"
-                    color="transparent"
-                    image={img5}
-                    text={
-                      "iPhone 15 price in India starts at Rs. 79,900 for the base model with 128GB of storage, while the iPhone 15 Plus with the same amount of storage starts at Rs. 89,900.."
-                    }
-                  />
-                </div>
-                <div className="more-text">
+              {Technology.slice(3, 5).map((techData, index) => (
+                  <div key={index} style={{ marginTop: "10px" }}>
+                    {/* Assuming ImageCard component accepts 'img', 'text', 'height', and 'width' as props */}
+                    <ImageCard
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: 400,
+                        height: "40px",
+                        borderRadius: 0,
+                      }}
+                      height="200px"
+                      title={techData?.title}
+                      width="100%"
+                      id={techData?._id}
+                      img={techData?.image}
+                      text="iPhone 15, iPhone 15 Plus, iPhone 15 Pro, iPhone 15 Pro Max Preorders Be..."
+                    />
+                  </div>
+                ))}
+                {/* <div className="more-text">
                   {"more"}{" "}
                   <FaGreaterThan
                     style={{
                       marginLeft: "6px",
                     }}
                   />
-                </div>
+                </div> */}
               </div>
               <div className="main-page-technology-third-column">
-                <VideoCard color="black" width="100%" />
-                <VideoCard color="black" width="100%" />
-                <div className="more-text">
+              {Technology.slice(6, 8).map((techData, index) => (
+                  <div key={index} style={{ marginTop: "10px" }}>
+                    {/* Assuming ImageCard component accepts 'img', 'text', 'height', and 'width' as props */}
+                    <ImageCard
+                      style={{
+                        fontSize: "15px",
+                        fontWeight: 400,
+                        height: "40px",
+                        borderRadius: 0,
+                      }}
+                      height="200px"
+                      title={techData?.title}
+                      width="100%"
+                      id={techData?._id}
+                      img={techData?.image}
+                      text="iPhone 15, iPhone 15 Plus, iPhone 15 Pro, iPhone 15 Pro Max Preorders Be..."
+                    />
+                  </div>
+                ))}
+                {/* <VideoCard color="black" width="100%" />
+                <VideoCard color="black" width="100%" /> */}
+                {/* <div className="more-text">
                   {"more"}{" "}
                   <FaGreaterThan
                     style={{
                       marginLeft: "6px",
                     }}
                   />
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -666,22 +669,74 @@ const MainPage = () => {
                   stories.length > 0 &&
                   stories.map((story) => (
                     <Col span={8} key={story._id}>
-                      <Card
-                        hoverable
-                        style={{ marginBottom: 16, flex: 1 }}
-                        cover={<img alt={story.title} src={story.image} />}
+                      <div
+                        onClick={() => {
+                          setSelectedImages(story?.images);
+                          setSelectedTitle(story?.title);
+                          setIsModalVisible(true);
+                        }}
                       >
-                        <Meta
-                          title={story.title}
-                          description="www.instagram.com"
-                        />
-                      </Card>
+                        <Card
+                          hoverable
+                          style={{
+                            marginBottom: 16,
+                            flex: 1,
+                            width: "250px",
+                            height: "420px",
+                          }}
+                        >
+                          <img
+                            style={{
+                              width: "200px",
+                              height: "300px",
+                              objectFit: "fill",
+                            }}
+                            alt={story.title}
+                            src={story.images[0]}
+                          />
+                          <Meta
+                            title={story.title}
+                            description="www.instagram.com"
+                          />
+                        </Card>
+                      </div>
                     </Col>
                   ))}
+                <Modal
+                  title="Stories"
+                  visible={isModalVisible}
+                  onCancel={() => setIsModalVisible(false)}
+                  footer={null}
+                >
+                  <Slider {...sliderSettings}>
+                    {selectedImages &&
+                      selectedImages.map((image, index) => (
+                        <div
+                          key={index}
+                          style={{
+                            display: "flex",
+                            justifyContent: "center",
+                          }}
+                        >
+                          <img
+                            style={{
+                              width: "400px",
+                              height: "400px",
+                            }}
+                            src={image}
+                            alt={`Image ${index}`}
+                          />
+                          {/* Display the dynamically selected title */}
+                          <div style={{ textAlign: "center" }}>
+                            {selectedTitle}
+                          </div>
+                        </div>
+                      ))}
+                  </Slider>
+                </Modal>
               </div>
             </div>
           </div>
-          {/* ... (your existing JSX code) */}
         </div>
 
         <div className="main-video-gallery-main-container container2 container3">

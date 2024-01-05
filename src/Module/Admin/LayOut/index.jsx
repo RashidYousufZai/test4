@@ -18,6 +18,7 @@ import Poll from "../pages/Poll";
 import { API_URL } from "../../../../API";
 import FlashNews from "../pages/FlashNews";
 import VisualStories from "../pages/VisualStories";
+import SocialMediaLink from "../pages/SocialMediaLink";
 
 const { Sider, Content } = Layout;
 
@@ -82,6 +83,17 @@ const AdminLayout = () => {
       <Sider style={siderStyle2}></Sider>
       <Content style={contentStyle}>
         <Routes>
+          <Route
+            path="dashboard/upload"
+            element={
+              // Only allow access if the query parameter "edit" is set to "true"
+              location.search.includes("edit=true") ? (
+                <Upload />
+              ) : (
+                <div style={{ color: "black" }}>No Access</div>
+              )
+            }
+          />
           <Route path={"dashboard"} element={<Dashboard />} />
           {access.map((path) => {
             switch (path) {
@@ -119,6 +131,10 @@ const AdminLayout = () => {
                 return <Route key={path} path={path} element={<Poll />} />;
               case "flashnews":
                 return <Route key={path} path={path} element={<FlashNews />} />;
+              case "sociallink":
+                  return (
+                    <Route key={path} path={path} element={<SocialMediaLink />} />
+                  );
               case "creatuser":
                 return (
                   <Route key={path} path={path} element={<CreateUser />} />

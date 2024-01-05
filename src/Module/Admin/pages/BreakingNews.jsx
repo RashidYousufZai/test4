@@ -1,4 +1,4 @@
-import { Button, Card, Col, Input, Modal, Row, Select, message } from "antd";
+import { Button, Card, Col, Input, Modal, Row, Select, Switch, message } from "antd";
 import axios from "axios";
 import { useState, useRef, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
@@ -7,9 +7,22 @@ import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../../API";
 const BreakingNews = () => {
   const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
+  const [type, setType] = useState("img");
   const [Topic, setTopic] = useState("");
   const [desc, setdesc] = useState("");
   const [reported, setreported] = useState("");
+  const [subCategory, setSubCategory] = useState("");
+  const [comment, setComment] = useState(false);
+  const [role, setRole] = useState("");
+  const [subCategoryData, setSubCategoryData] = useState("");
+  const [categoryData, setCategoryData] = useState([]);
+  const [usercategoryData, setuserCategoryData] = useState([]);
+  const [categoryOptions, setCategoryOptions] = useState([]);
+  const [userCategoryOptions, setUserCategoryOptions] = useState([]);
+  const [admincategoryData, setadminCategoryData] = useState([]);
+  const [subcategory, setSubcategory] = useState("");
   const [publish, setpublish] = useState("");
   const [Language, setLanguage] = useState("English");
   const [newType, setNewType] = useState("breakingNews");
@@ -22,7 +35,69 @@ const BreakingNews = () => {
   const [Update, setUpdate] = useState(false);
   const navigation = useNavigate();
 
+  const onTitleInput = (event) => {
+    const newTitle = event.target.value;
+    setTitle(newTitle);
+    // Update slug in real-time
+    setSlug(newTitle.toLowerCase().replace(/\s+/g, "-"));
+  };
+
+  const onChange = (checked) => {
+    setComment(checked);
+  };
+
+  const onSlugChange = (event) => {
+    // Set a flag to indicate that slug was manually edited
+    setIsSlugManuallyEdited(true);
+    setSlug(event.target.value);
+  };
+
   useEffect(() => {
+    axios
+      .get(`${API_URL}/content?type=category`)
+      .then((content) => {
+        let arr = [];
+        for (let i = 0; i < content.data.length; i++) {
+          const element = content.data[i];
+          arr.push({
+            key: element._id,
+            value: element.text,
+            label: element.text,
+          });
+        }
+        // let values = arr.map((item) => item?.label);
+        setCategoryData(arr);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    axios
+      .get(`${API_URL}/user?id=${localStorage.getItem("id")}`)
+      .then((user) => {
+        console.log(user);
+        setpublish(user.data[0].email);
+        setCategoryData(user.data[0].acsses);
+        console.log(user?.data[0]?.acsses);
+        setRole(user.data[0].role);
+        setUserCategoryOptions(user?.data[0]?.selectedKeywords || []);
+        console.log(userCategoryOptions);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    axios.get(`${API_URL}/subcategory?category=${Topic}`).then((content) => {
+      let arr = [];
+      for (let i = 0; i < content.data.length; i++) {
+        const element = content.data[i];
+        arr.push({
+          key: element._id,
+          value: element.text,
+          label: element.text,
+        });
+      }
+      setCategoryOptions(arr);
+    });
+    console.log(categoryData);
     console.log(id, "id");
     console.log(onEdit, "onEdit");
     if (onEdit) {
@@ -80,6 +155,7 @@ const BreakingNews = () => {
           publishBy: publish,
           newsType: newType,
           image: image.data.image,
+          comment: comment,
         })
         .then((data) => {
           console.log(data.data);
@@ -272,21 +348,28 @@ const BreakingNews = () => {
               {/* Third and Fourth columns - 75% width */}
               <Col span={18}>
                 <Row gutter={20}>
-                  {/* Third column - 50% width */}
                   <Col span={12}>
-                    <Input
-                      placeholder="Headline"
-                      value={title}
-                      onChange={(e) => setTitle(e.target.value)}
-                    />
-                    <div style={{ marginBottom: "20px" }}></div>
-                  </Col>
-                  {/* Fourth column - 50% width */}
-                  <Col span={12}>
-                    <Input
-                      placeholder="Topic"
-                      value={Topic}
-                      onChange={(e) => setTopic(e.target.value)}
+                    <Select
+                      // onChange={(e) => setValue(e)}
+                      placeholder="Select Language"
+                      onChange={(e) => setType(e)}
+                      defaultValue="img"
+                      value={type}
+                      style={{
+                        width: "100%",
+                        // height: 50,
+                        marginBottom: "20px",
+                      }}
+                      options={[
+                        {
+                          value: "img",
+                          label: "Image",
+                        },
+                        {
+                          value: "vid",
+                          label: "Video",
+                        },
+                      ]}
                     />
                   </Col>
                   <Col span={12}>
@@ -316,6 +399,60 @@ const BreakingNews = () => {
                       ]}
                     />
                   </Col>
+                  {/* Third column - 50% width */}
+                  <Col span={24}>
+                    <Input
+                      placeholder="Headline"
+                      value={title}
+                      onInput={onTitleInput}
+                    />
+                    <div style={{ marginBottom: "20px" }}></div>
+                  </Col>
+                  <Col span={12}>
+                    <Select
+                      value={Topic || undefined}
+                      placeholder="Category"
+                      onChange={(e) => setTopic(e)}
+                      style={{ width: "100%" }}
+                      options={
+                        role === "admin"
+                          ? categoryData.map((category) => ({
+                              value: category,
+                              label: category,
+                            }))
+                          : userCategoryOptions.map((category) => ({
+                              value: category.value,
+                              label: category.value,
+                            }))
+                      }
+                    />
+                  </Col>
+
+                  {console.log(categoryData, userCategoryOptions)}
+
+                  <Col span={12}>
+                    <Select
+                      placeholder="Sub Category"
+                      onChange={(value) => setSubcategory(value)}
+                      value={subcategory}
+                      style={{
+                        width: "100%",
+                        marginBottom: "20px",
+                      }}
+                      options={categoryOptions.map((option) => ({
+                        value: option.value,
+                        label: option.label,
+                      }))}
+                    />
+                  </Col>
+
+                  {/* <Col span={12}>
+                    <Input
+                      placeholder="Topic"
+                      value={Topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                    />
+                  </Col> */}
                 </Row>
               </Col>
             </Row>
@@ -330,7 +467,7 @@ const BreakingNews = () => {
                 />
                 <div style={{ marginBottom: "20px" }}></div>
               </Col>
-              <Col span={12}>
+              <Col span={6}>
                 <Select
                   mode="multiple"
                   placeholder="Tags"
@@ -344,10 +481,39 @@ const BreakingNews = () => {
                 <div style={{ marginBottom: "20px" }}></div>
               </Col>
               <Col span={6}>
+                <Select
+                  placeholder="Reported By"
+                  value={reported ? reported : null}
+                  onChange={(e) => setreported(e)}
+                  style={{
+                    width: "100%",
+                  }}
+                  options={[
+                    {
+                      value: "LOKSATYA.AGENCIES",
+                      label: "LOKSATYA.AGENCIES",
+                    },
+                    {
+                      value: "PTI",
+                      label: "PTI",
+                    },
+                    {
+                      value: "UNIVARTI",
+                      label: "UNIVARTI",
+                    },
+                    {
+                      value: "BHASHA",
+                      label: "BHASHA",
+                    },
+                  ]}
+                />
+                <div style={{ marginBottom: "20px" }}></div>
+              </Col>
+              <Col span={6}>
                 <Input
-                  placeholder="Repoted By"
-                  value={reported}
-                  onChange={(e) => setreported(e.target.value)}
+                  placeholder="Slug"
+                  value={slug}
+                  onChange={onSlugChange}
                 />
                 <div style={{ marginBottom: "20px" }}></div>
               </Col>
@@ -358,6 +524,15 @@ const BreakingNews = () => {
                   onChange={(e) => setpublish(e.target.value)}
                 />
                 <div style={{ marginBottom: "20px" }}></div>
+              </Col>
+              <Col span={6}>
+                Comment
+                <Switch
+                  size="small"
+                  style={{ marginLeft: 5 }}
+                  defaultChecked={false}
+                  onChange={onChange}
+                />
               </Col>
               <Col span={6}>
                 <Button onClick={showVerifyModal} type="primary">

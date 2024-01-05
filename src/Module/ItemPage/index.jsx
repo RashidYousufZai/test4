@@ -18,6 +18,11 @@ const ItemPage = () => {
   const { t } = useTranslation();
   const { pathname } = useLocation();
 
+  const stripHtmlTags = (html) => {
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    return doc.body.textContent || "";
+  };
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
@@ -159,7 +164,7 @@ const ItemPage = () => {
                       navigation(`/details/${title}?id=${item._id}`);
                     }}
                     title={item?.title}
-                    discription={item?.discription}
+                    discription={stripHtmlTags(item?.discription)}
                     image={item?.image}
                     date={date}
                   />

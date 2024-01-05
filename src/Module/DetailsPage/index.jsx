@@ -12,6 +12,7 @@ import { FaRegComment } from "react-icons/fa";
 import DetailsNewsCard from "../../Components/DetailsPage/NewsCard";
 import DetailsVideoCard from "../../Components/DetailsPage/VideoCard";
 import AdCard from "../../Components/Global/AdCard";
+import { TwitterEmbed, InstagramEmbed } from "react-social-media-embed";
 import { useLocation, useNavigate } from "react-router-dom";
 import {
   EmailIcon,
@@ -41,11 +42,27 @@ const DetailsPage = () => {
   const [Email, setEmail] = useState("");
   const [comment, setComment] = useState("");
   const [userData, setUserData] = useState([]);
+  const [socialedia, setsocialedia] = useState([]);
   const { t } = useTranslation();
   const navigation = useNavigate();
   const { loading, setLoading, effect } = useContext(Loading);
   const query = new URLSearchParams(search);
   console.log(query.get("id"));
+
+  const fetchData = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/sociallink`);
+      setsocialedia(response.data);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  console.log(socialedia);
+
   useEffect(() => {
     console.log("heee");
     axios
@@ -117,7 +134,11 @@ const DetailsPage = () => {
           <div className="details-page-top-items">
             <div className="details-page-top-item1">
               <FaUser style={{ marginRight: "10px" }} />
-              {data?.publishBy}
+              {data?.publishBy
+                ? data?.publishBy.replace(/\d+/g, "").split("@")[0]
+                : "Admin"}
+
+              {/* {data?.publishBy} */}
               {console.log(data?.publishBy)}
             </div>
             <div className="details-page-top-item2">
@@ -186,10 +207,38 @@ const DetailsPage = () => {
             <div className="details-main-related-new-area-heading">
               {t("rn")}
             </div>
-            <div className="details-main-related-new-area-cards">
+            <div
+              className="details-main-related-new-area-cards"
+              style={{ marginTop: 20, marginBottom: 20 }}
+            >
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                {socialedia
+                .filter(item => item.status === "active")
+                .slice(0, 3).map((item) => (
+                  <div
+                    key={item?._id}
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      marginRight: 5,
+                    }}
+                  >
+                    {item?.platform === "Instagram" ? (
+                      <InstagramEmbed
+                        url={item?.link}
+                        width={328}
+                        height={400}
+                      />
+                    ) : (
+                      <TwitterEmbed url={item?.link} width={325} height={400} />
+                    )}
+                  </div>
+                ))}
+              </div>
+
+              {/* <DetailsNewsCard />
               <DetailsNewsCard />
-              <DetailsNewsCard />
-              <DetailsNewsCard />
+              <DetailsNewsCard /> */}
             </div>
           </div>
           <div className="detalis-page-commment-area1">

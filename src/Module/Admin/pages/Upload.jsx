@@ -20,14 +20,15 @@ import { API_URL } from "../../../../API";
 const { TextArea } = Input;
 const Upload = () => {
   const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState(title);
+  const [slug, setSlug] = useState("");
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [Topic, setTopic] = useState("");
   const [desc, setdesc] = useState("");
   const [reported, setreported] = useState("");
   const [publish, setpublish] = useState("");
   const [type, setType] = useState("img");
   const [Language, setLanguage] = useState("English");
-  const [newType, setNewType] = useState("breakingNews");
+  const [newType, setNewType] = useState("upload");
   const [keyword, setkeyword] = useState([]);
   const [isVerifyModalOpen, setIsVerifyModalOpen] = useState(false);
   const [img, setImg] = useState(null);
@@ -50,6 +51,20 @@ const Upload = () => {
   const onNameChange = (event) => {
     setName(event.target.value);
   };
+
+  const onTitleInput = (event) => {
+    const newTitle = event.target.value;
+    setTitle(newTitle);
+    // Update slug in real-time
+    setSlug(newTitle.toLowerCase().replace(/\s+/g, "-"));
+  };
+
+  const onSlugChange = (event) => {
+    // Set a flag to indicate that slug was manually edited
+    setIsSlugManuallyEdited(true);
+    setSlug(event.target.value);
+  };
+
   const addItem = (e) => {
     e.preventDefault();
     setOptions([...options, { value: name, label: name, key: name }]);
@@ -70,7 +85,7 @@ const Upload = () => {
   }));
 
   useEffect(() => {
-    setSlug(title);
+    setSlug(slug);
     console.log(id, "id");
     console.log(onEdit, "onEdit");
     if (onEdit) {
@@ -192,6 +207,7 @@ const Upload = () => {
           image: image.data.image,
           type: type,
           subCategory: subCategory,
+          slug: slug,
         })
         .then((data) => {
           console.log(data.data);
@@ -507,7 +523,7 @@ const Upload = () => {
                     <Input
                       placeholder="Headline"
                       value={title}
-                      onChange={(e) => setTitle(e.target.value)}
+                      onInput={onTitleInput}
                     />
                     <div style={{ marginBottom: "20px" }}></div>
                   </Col>
@@ -537,6 +553,13 @@ const Upload = () => {
                     />
                     <div style={{ marginBottom: "20px" }}></div>
                   </Col>
+                  {/* <Col span={12}>
+                    <Input
+                      placeholder="Topic"
+                      value={Topic}
+                      onChange={(e) => setTopic(e.target.value)}
+                    />
+                  </Col> */}
                 </Row>
               </Col>
               {!onEdit && (
@@ -741,13 +764,13 @@ const Upload = () => {
                 <div style={{ marginBottom: "20px" }}></div>
               </Col>
               <Col span={6}>
-                <Input
-                  placeholder="Slug"
-                  value={title}
-                  onChange={(e) => setSlug(e.target.value)}
-                />
-                <div style={{ marginBottom: "20px" }}></div>
-              </Col>
+                  <Input
+                    placeholder="Slug"
+                    value={slug}
+                    onChange={onSlugChange}
+                  />
+                  <div style={{ marginBottom: "20px" }}></div>
+                </Col>
               <Col span={6}>
                 <Input readOnly placeholder="Publish By" value={publish} />
                 <div style={{ marginBottom: "20px" }}></div>

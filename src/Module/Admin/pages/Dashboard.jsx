@@ -45,6 +45,7 @@ const Dashboard = () => {
       console.log(article);
     });
   }, [axios]);
+  console.log(articleData);
 
   const stripHtmlTags = (html) => {
     const doc = new DOMParser().parseFromString(html, "text/html");
@@ -250,13 +251,12 @@ const Dashboard = () => {
       key: "createdAt",
       dataIndex: "createdAt",
       render: (date) => (
-        <div style={{ width: "100px" }}>
-          {moment(date).format("DD-YYYY-MM")}
+        <div style={{ width: "150px" }}>
+          {moment(date).format("DD-MM-YYYY hh:mm A")}
         </div>
       ),
       sorter: (a, b) => moment(a.createdAt) - moment(b.createdAt),
     },
-
     {
       title: "Image",
       dataIndex: "image",
@@ -416,6 +416,27 @@ const Dashboard = () => {
       ),
     },
     {
+      title: "Category",
+      key: "topic",
+      dataIndex: "topic",
+      render: (_, { topic }) => (
+        <>
+          <Tag color={"gold"}>{topic}</Tag>
+        </>
+      ),
+    },
+    {
+      title: "Slug",
+      key: "title",
+      dataIndex: "title",
+      render: (_, { title }) => (
+        <>
+          <Tag>{title}</Tag>
+        </>
+      ),
+    },
+
+    {
       title: "Tags",
       key: "keyWord",
       dataIndex: "keyWord",
@@ -439,20 +460,20 @@ const Dashboard = () => {
         <a>{reportedBy ? reportedBy : "Agencies"}</a>
       ),
     },
-    // {
-    //   title: "Published By",
-    //   key: "publishBy",
-    //   dataIndex: "publish",
-    //   render: (data, { publishBy }) => <a>{publishBy ? publishBy : "Admin"}</a>,
-    // },
     {
       title: "Published By",
       key: "publishBy",
       dataIndex: "publish",
-      render: (data, { publishBy }) => (
-        <a>{publishBy ? publishBy.split("@")[0] : "Admin"}</a>
-      ),
+      render: (data, { publishBy }) => <a>{publishBy ? publishBy : "Admin"}</a>,
     },
+    // {
+    //   title: "Published By",
+    //   key: "publishBy",
+    //   dataIndex: "publish",
+    //   render: (data, { publishBy }) => (
+    //     <a>{publishBy ? publishBy.split("@")[0] : "Admin"}</a>
+    //   ),
+    // },
     {
       title: "Language",
       key: "language",
@@ -549,6 +570,10 @@ const Dashboard = () => {
                   label: "All",
                 },
                 {
+                  value: "upload",
+                  label: "Upload",
+                },
+                {
                   value: "breakingNews",
                   label: "Breaking News",
                 },
@@ -572,7 +597,7 @@ const Dashboard = () => {
               options={[
                 {
                   value: "img",
-                  label: "Images / Text",
+                  label: "Text",
                 },
                 {
                   value: "vid",

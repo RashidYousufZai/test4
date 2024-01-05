@@ -109,6 +109,7 @@ const SideBar = () => {
     live: "Live",
     poll: "Poll",
     flashnews: "Flash News",
+    sociallink: "Social Link",
     stories: "Visual Stories",
   };
 
@@ -120,6 +121,7 @@ const SideBar = () => {
     "upload",
     "creatuser",
     "flashnews",
+    "sociallink",
     "content",
     "ads",
     "comment",
@@ -174,6 +176,9 @@ const SideBar = () => {
           case "flashnews":
             icon = <YourCreateUserIconComponent />;
             break;
+          case "sociallink":
+              icon = <YourCreateUserIconComponent />;
+              break;
           case "content":
             icon = <YourContentIconComponent />;
             break;

@@ -23,28 +23,24 @@ import { API_URL } from "../../../API";
 const LivePage = () => {
   const { pathname } = useLocation();
   const { t } = useTranslation();
-  const [Data,setData] = useState({})
+  const [Data, setData] = useState({});
 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
   useEffect(() => {
-    axios
-      .get(
-        `${API_URL}/live`
-      )
-      .then((data) => {
-        console.log(data.data);
-        setData(data.data.reverse()[0])
-      });
+    axios.get(`${API_URL}/live`).then((data) => {
+      console.log(data?.data);
+      setData(data?.data?.reverse()[0]);
+    });
   }, []);
   return (
     <div className="detail-page-top-container container2 container3">
       <div className="container-detail-page-left-side">
         <h1 className="details-page-main-heading">
-          {
-            Data.title?Data.title:"100 Hours On, Forces Locked In Jungle Warfare With Terrorists InKashmir"
-          }
+          {Data?.title
+            ? Data?.title
+            : "100 Hours On, Forces Locked In Jungle Warfare With Terrorists InKashmir"}
         </h1>
         <div className="details-page-top-items">
           <div className="details-page-top-item1">
@@ -70,13 +66,13 @@ const LivePage = () => {
         </video> */}
         <iframe
           className="details-page-main-video"
-          style={{height:400}}
-            src={Data.link}
-            title="YouTube video player"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-            allowfullscreen
-          ></iframe>
+          style={{ height: 400 }}
+          src={Data?.link}
+          title="YouTube video player"
+          frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen
+        ></iframe>
         <div className="details-main-text-area">
           <div className="details-main-related-new-area-heading">
             Loksatya Articles

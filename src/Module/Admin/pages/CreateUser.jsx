@@ -90,6 +90,10 @@ const CreateUser = () => {
       label: "Visual Stories",
       value: "stories",
     },
+    {
+      label: "Social media Embade",
+      value: "sociallink",
+    },
   ];
   const onChange = (checkedValues) => {
     // console.log("checked = ", checkedValues);
