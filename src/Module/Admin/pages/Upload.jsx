@@ -286,7 +286,7 @@ const Upload = () => {
             // setpublish("");
             setreported("");
             setNewType("");
-            navigation("/dashboard");
+            navigation("/dashboard/dashboard");
             setUpdate(false);
             setOnEdit(false);
           })
@@ -312,7 +312,7 @@ const Upload = () => {
           setkeyword([]);
           setImg(null);
           setOnEdit(false);
-          navigation("/dashboard");
+          navigation("/dashboard/dashboard");
         })
         .catch(() => {
           message.error("Your article was not successfully Edit");
@@ -337,62 +337,130 @@ const Upload = () => {
         <Col span={24}>
           <Card style={{ minHeight: "80vh", height: "100%" }}>
             {onEdit && (
-              <Col span={6}>
-                <Input
-                  type="file"
-                  name="file"
-                  id="file-name"
-                  onChange={(e) => {
-                    setImg(e.target.files[0]);
-                    console.log(e.target.files[0]);
-                  }}
-                  style={{ display: "none", overflow: "hidden" }}
-                  hidden={true}
-                />
-                <div
-                  onClick={() => {
-                    document.getElementById("file-name").click();
-                    setUpdate(true);
-                  }}
-                  style={{
-                    width: "auto",
-                    height: "200px",
-                    backgroundColor: "rgba(0,0,0,0.1",
-                    borderRadius: "10px",
-                    marginBottom: 10,
-                    overflow: "hidden",
-                  }}
-                >
-                  {img == null ? (
-                    <div
+              <Row gutter={24}>
+                <Col span={6}>
+                  <Input
+                    type="file"
+                    name="file"
+                    id="file-name"
+                    onChange={(e) => {
+                      setImg(e.target.files[0]);
+                      console.log(e.target.files[0]);
+                    }}
+                    style={{ display: "none", overflow: "hidden" }}
+                    hidden={true}
+                  />
+                  <div
+                    onClick={() => {
+                      document.getElementById("file-name").click();
+                      setUpdate(true);
+                    }}
+                    style={{
+                      width: "auto",
+                      height: "200px",
+                      backgroundColor: "rgba(0,0,0,0.1",
+                      borderRadius: "10px",
+                      marginBottom: 10,
+                      overflow: "hidden",
+                    }}
+                  >
+                    {img == null ? (
+                      <div
+                        style={{
+                          height: "100%",
+                          fontSize: "25px",
+                          fontWeight: "600",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          display: "flex",
+                          color: "rgba(0,0,0,0.5)",
+                          overflow: "hidden",
+                        }}
+                      >
+                        Upload Image or Video here
+                      </div>
+                    ) : (
+                      <img
+                        style={{
+                          width: "auto",
+                          height: "200px",
+                          borderRadius: "10px",
+                        }}
+                        src={URL.createObjectURL(img)}
+                      />
+                    )}
+                  </div>
+                </Col>
+                <Col span={18}>
+                  <Row>
+                  <Col span={12}>
+                    <Select
+                      placeholder="Select Language"
+                      onChange={(e) => setType(e)}
+                      defaultValue="img"
+                      value={type}
                       style={{
-                        height: "100%",
-                        fontSize: "25px",
-                        fontWeight: "600",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        display: "flex",
-                        color: "rgba(0,0,0,0.5)",
-                        overflow: "hidden",
+                        width: "100%",
+                        marginBottom: "20px",
                       }}
-                    >
-                      Upload Image or Video here
-                    </div>
-                  ) : (
-                    <img
-                      style={{
-                        width: "auto",
-                        height: "200px",
-                        borderRadius: "10px",
-                      }}
-                      src={URL.createObjectURL(img)}
+                      options={[
+                        { value: "img", label: "Image" },
+                        { value: "vid", label: "Video" },
+                      ]}
                     />
-                  )}
-                </div>
-              </Col>
+                  </Col>
+                  <Col span={12}>
+                    <Select
+                      placeholder="Select Language"
+                      onChange={(e) => setLanguage(e)}
+                      value={Language}
+                      style={{
+                        width: "100%",
+                        marginBottom: "20px",
+                      }}
+                      options={[
+                        { value: "English", label: "English" },
+                        { value: "Urdu", label: "Urdu" },
+                        { value: "Hindi", label: "Hindi" },
+                      ]}
+                    />
+                  </Col>
+                  </Row>
+                  <Col span={24}>
+                    <Input
+                      placeholder="Headline"
+                      value={title}
+                      onInput={onTitleInput}
+                    />
+                    <div style={{ marginBottom: "20px" }}></div>
+                  </Col>
+                  <Row>
+                  <Col span={12}>
+                    <Select
+                      value={Topic ? Topic : null}
+                      placeholder="Category"
+                      onChange={(e) => setTopic(e)}
+                      style={{ width: "100%" }}
+                      options={role === "admin" ? categoryData : userCategoryOptions}
+                    />
+                  </Col>
+                  <Col span={12}>
+                    <Select
+                      placeholder="Sub Category"
+                      value={subCategory ? subCategory : null}
+                      onChange={(e) => setSubCategory(e)}
+                      style={{ width: "100%" }}
+                      options={subCategoryData}
+                    />
+                    <div style={{ marginBottom: "20px" }}></div>
+                  </Col>
+                  </Row>
+                </Col>
+              </Row>
+              
             )}
 
-            {onEdit ? (
+            {/* {onEdit ? (
               <>
                 <Col span={8}>
                   <img
@@ -408,7 +476,7 @@ const Upload = () => {
               </>
             ) : (
               <></>
-            )}
+            )} */}
             <Row gutter={24}>
               {!onEdit && (
                 <Col span={6}>
@@ -466,7 +534,7 @@ const Upload = () => {
                   </div>
                 </Col>
               )}
-              <Col span={18}>
+              {!onEdit && (<Col span={18}>
                 <Row gutter={20}>
                   <Col span={12}>
                     <Select
@@ -561,7 +629,7 @@ const Upload = () => {
                     />
                   </Col> */}
                 </Row>
-              </Col>
+              </Col>)}
               {!onEdit && (
                 <Row gutter={12}>
                   {/* <Col span={12}>
@@ -593,7 +661,7 @@ const Upload = () => {
                   </Col> */}
                 </Row>
               )}
-              {onEdit && (
+              {/* {onEdit && (
                 <>
                   <Col span={12}>
                     <Select
@@ -669,8 +737,9 @@ const Upload = () => {
                       }
                     />
                   </Col> */}
-                </>
-              )}
+                {/* </>
+              )} */} 
+              
               <Col span={24} style={{ marginTop: "20px" }}>
                 <JoditEditor
                   // config={{}}

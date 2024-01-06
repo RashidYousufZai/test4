@@ -211,7 +211,7 @@ const TopStories = () => {
             setpublish("");
             setreported("");
             setNewType("");
-            navigation("/dashboard");
+            navigation("/dashboard/dashboard");
             setUpdate(false);
             setOnEdit(false);
           })
@@ -237,7 +237,7 @@ const TopStories = () => {
           setkeyword([]);
           setImg(null);
           setOnEdit(false);
-          navigation("/dashboard");
+          navigation("/dashboard/dashboard");
         })
         .catch(() => {
           message.error("Your article was not successfully Edit");

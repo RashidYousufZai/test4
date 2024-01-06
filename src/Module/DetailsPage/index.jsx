@@ -213,27 +213,24 @@ const DetailsPage = () => {
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
                 {socialedia
-                .filter(item => item.status === "active")
-                .slice(0, 3).map((item) => (
-                  <div
-                    key={item?._id}
-                    style={{
-                      display: "flex",
-                      justifyContent: "center",
-                      marginRight: 5,
-                    }}
-                  >
-                    {item?.platform === "Instagram" ? (
-                      <InstagramEmbed
-                        url={item?.link}
-                        width={328}
-                        height={400}
-                      />
-                    ) : (
-                      <TwitterEmbed url={item?.link} width={325} height={400} />
-                    )}
-                  </div>
-                ))}
+                  .filter((item) => item.status === "active")
+                  .slice(0, 3)
+                  .map((item) => (
+                    <div
+                      key={item?._id}
+                      style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        marginRight: 5,
+                      }}
+                    >
+                      {item?.platform === "Instagram" ? (
+                        <InstagramEmbed url={item?.link} width={328}  height={310}/>
+                      ) : (
+                        <TwitterEmbed url={item?.link} width={325} height={310}/>
+                      )}
+                    </div>
+                  ))}
               </div>
 
               {/* <DetailsNewsCard />

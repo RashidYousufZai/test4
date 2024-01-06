@@ -592,7 +592,7 @@ const MainPage = () => {
               </div>
 
               <div className="main-page-technology-first-column">
-              {Technology.slice(3, 5).map((techData, index) => (
+                {Technology.slice(3, 5).map((techData, index) => (
                   <div key={index} style={{ marginTop: "10px" }}>
                     {/* Assuming ImageCard component accepts 'img', 'text', 'height', and 'width' as props */}
                     <ImageCard
@@ -621,7 +621,7 @@ const MainPage = () => {
                 </div> */}
               </div>
               <div className="main-page-technology-third-column">
-              {Technology.slice(6, 8).map((techData, index) => (
+                {Technology.slice(6, 8).map((techData, index) => (
                   <div key={index} style={{ marginTop: "10px" }}>
                     {/* Assuming ImageCard component accepts 'img', 'text', 'height', and 'width' as props */}
                     <ImageCard
@@ -741,35 +741,26 @@ const MainPage = () => {
 
         <div className="main-video-gallery-main-container container2 container3">
           <div className="main-page-video-heading2">{t("ph")}</div>
-          <Slider
-            className="main-video-gallery-imgs"
-            dots={true}
-            infinite={true}
-            slidesToShow={4}
-            slidesToScroll={1}
-          >
-            <div>
-              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
-            </div>
-            <div>
-              <img src={Article.length > 0 ? Article[1].image : null} alt="" />
-            </div>
-            <div>
-              <img src={Article.length > 0 ? Article[2].image : null} alt="" />
-            </div>
-            <div>
-              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
-            </div>
-            <div>
-              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
-            </div>
-            <div>
-              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
-            </div>
-            <div>
-              <img src={Article.length > 0 ? Article[0].image : null} alt="" />
-            </div>
-          </Slider>
+          {Article.length > 0 ? (
+  <Slider
+    className="main-video-gallery-imgs"
+    dots={true}
+    infinite={true}
+    slidesToShow={4}
+    slidesToScroll={1}
+  >
+    {Article.slice(0, 5).map((article, index) => (
+      <div key={index} className="slider-item">
+        <div className="image-container">
+          <img src={article.image} alt={article.title} />
+        </div>
+        <p style={{ textAlign: "center", color: "white" }}>{article.title}</p>
+      </div>
+    ))}
+  </Slider>
+) : (
+  <p>No articles available</p>
+)}
         </div>
       </div>
       {/* <Modal
