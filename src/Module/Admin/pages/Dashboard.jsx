@@ -38,6 +38,8 @@ const Dashboard = () => {
   const { onEdit, setOnEdit, id, setId } = useContext(onEditContext);
   const [visible, setVisible] = useState("");
   const [sortedArticleData, setSortedArticleData] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [category, setcategory] = useState([]);
   const navigation = useNavigate();
   useEffect(() => {
     axios.get(`${API_URL}/article`).then((article) => {
@@ -51,6 +53,16 @@ const Dashboard = () => {
     const doc = new DOMParser().parseFromString(html, "text/html");
     return doc.body.textContent || "";
   };
+
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/content?type=category`)
+      .then((data) => {
+        setcategory(data?.data);
+      })
+      .catch((err) => {});
+  }, []);
+  console.log(category);
 
   // const handleStatusUpdate = (articleId, newStatus) => {
   //   // Make an API call to update the status
@@ -198,6 +210,12 @@ const Dashboard = () => {
       });
   };
 
+  const resetFilters = () => {
+    setfilterItemResponse([]);
+    setSelectedCategory("");
+    location.reload();
+  };
+
   useEffect(() => {
     // Initialize serial numbers when the component mounts or when the data changes
     const initialSerialNumbers = articleData.map((_, index) => index + 1);
@@ -243,7 +261,7 @@ const Dashboard = () => {
       title: "News Id",
       dataIndex: "_id",
       key: "_id",
-      render: (text) => text?.slice(0, 12),
+      // render: (text) => text?.slice(0, 12),
       sorter: (a, b) => a._id.localeCompare(b._id),
     },
     {
@@ -431,11 +449,10 @@ const Dashboard = () => {
       dataIndex: "title",
       render: (_, { title }) => (
         <>
-          <Tag>{title}</Tag>
+          <Tag>{title?.split(" ").slice(0, 5).join(" ")}</Tag>
         </>
       ),
     },
-
     {
       title: "Tags",
       key: "keyWord",
@@ -584,6 +601,7 @@ const Dashboard = () => {
               ]}
             />
           </Col>
+
           <Col span={6}>
             <Select
               style={{ width: "100%" }}
@@ -619,20 +637,24 @@ const Dashboard = () => {
               style={{ width: "100%" }}
             />
           </Col>
-          <Col span={6} style={{ marginTop: 10 }}>
-            <Input
-              onChange={(e) =>
+          <Col style={{ marginTop: 10 }} span={6} placeholder="headline">
+            <Select
+              placeholder="Select Category"
+              onChange={(value) =>
                 setfilterItemResponse([
                   ...filterItemResponse,
-                  {
-                    value: e.target.value,
-                    main: "category",
-                  },
+                  { value, main: "category" },
                 ])
               }
-              placeholder="category"
               style={{ width: "100%" }}
-            />
+              value={selectedCategory}
+            >
+              {category.map((categoryItem) => (
+                <Select.Option key={categoryItem?._id} value={categoryItem?.text}>
+                  {categoryItem?.text}
+                </Select.Option>
+              ))}
+            </Select>
           </Col>
           <Col style={{ marginTop: 10 }} span={6}>
             <Input
@@ -661,9 +683,18 @@ const Dashboard = () => {
               style={{ width: "100%" }}
             />
           </Col>
-          <Col style={{ marginTop: 10 }} span={4}>
+          <Col style={{ marginTop: 10 }} span={3}>
             <Button style={{ width: "100%" }} type="primary" onClick={onFilter}>
               Filter
+            </Button>
+          </Col>
+          <Col style={{ marginTop: 10 }} span={3}>
+            <Button
+              style={{ width: "100%", backgroundColor: "gray" }}
+              type="primary"
+              onClick={resetFilters}
+            >
+              Reset
             </Button>
           </Col>
           <Col span={24}>
