@@ -197,7 +197,7 @@ const ItemPage = () => {
         </div>
       </div>
       <div className="visual-stories-main-container container container3">
-        <div className="main-page-technology-heading">{t("vs")}</div>
+        {/* <div className="main-page-technology-heading">{t("vs")}</div>
         <div className="visual-stories-main-container2 container3">
           <div className="visual-stories-main-container-part1">
             <div
@@ -264,7 +264,7 @@ const ItemPage = () => {
           >
             <img src={img7} alt="" />
           </div>
-        </div>
+        </div> */}
       </div>
     </>
   );

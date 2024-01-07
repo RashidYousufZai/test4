@@ -9,7 +9,7 @@ const ImageCard = ({ width, height, img, text, style, border, id, title }) => {
   return (
     <div
       className="image-box"
-      style={{ width, height, borderRadius: border, cursor: "pointer" }}
+      style={{ width, height, borderRadius: border, cursor: "pointer"}}
       onClick={() => navigate(`/details/${title}?id=${id}`)}
     >
       <img src={img} alt="" style={{ borderRadius: border }} />

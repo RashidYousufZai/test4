@@ -60,6 +60,14 @@ const MainPage = () => {
 
   console.log(Technology);
 
+  const stripHtmlTags = (htmlString, wordLimit = 3) => {
+    const doc = new DOMParser().parseFromString(htmlString, 'text/html');
+    const textContent = doc.body.textContent || "";
+    const words = textContent.split(/\s+/);
+    const truncatedContent = words.slice(0, wordLimit).join(" ");
+    return truncatedContent;
+  };
+
   useEffect(() => {
     axios
       .get(`${API_URL}/article?category=Technology&status=online`)
@@ -98,11 +106,11 @@ const MainPage = () => {
         `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=upload&status=online`
       )
       .then((data) => {
-        setUpload(data)
-        console.log(data)
+        setUpload(data);
+        console.log(data);
       })
       .catch(() => {});
-      axios
+    axios
       .get(
         `${API_URL}/article?pagenation=true&limit=6&type=img&upload=topStories&status=online`
       )
@@ -281,7 +289,7 @@ const MainPage = () => {
                 <ImageCard
                   img={breakingNews?.[1]?.image}
                   text={breakingNews?.[1]?.title}
-                  title={breakingNews?.[0]?.title}
+                  title={breakingNews?.[1]?.title}
                   id={breakingNews?.[1]?._id}
                   height="100%"
                   width="100%"
@@ -289,7 +297,15 @@ const MainPage = () => {
               </div>
             </div>
             <div className="main-page-slider-setting">
-              {sliderItem === 1 ? (
+              <ImageCard
+                img={breakingNews?.[3]?.image}
+                text={breakingNews?.[3]?.title}
+                title={breakingNews?.[3]?.title}
+                id={breakingNews?.[3]?._id}
+                height="350px"
+                width="100%"
+              />
+              {/* {sliderItem === 1 ? (
                 <div
                   style={{
                     width: "400px",
@@ -353,7 +369,7 @@ const MainPage = () => {
 
                             {selectedOption !== null && (
                               <Progress
-                                percent={option.percentage.toFixed(0)} // Adjust the decimal places as needed
+                                percent={option.percentage.toFixed(0)}
                                 size="small"
                               />
                             )}
@@ -369,7 +385,7 @@ const MainPage = () => {
                   alt=""
                   className={`slider-img ${showItem ? "show" : ""}`}
                 />
-              )}
+              )} */}
               <div className="main-page-slider-items">
                 {[0, 1, 2, 3].map((item) => (
                   <div
@@ -388,14 +404,14 @@ const MainPage = () => {
                 ))}
               </div>
             </div>
-            <div className="more-text">
+            {/* <div className="more-text">
               {"more"}{" "}
               <FaGreaterThan
                 style={{
                   marginLeft: "6px",
                 }}
               />
-            </div>
+            </div> */}
           </div>
           <div className="main-left-side">
             <div className="main-left-side-top">
@@ -469,48 +485,52 @@ const MainPage = () => {
                 <NewsCard />
               </div> */}
             </div>
-            <div className="more-text">
+            {/* <div className="more-text">
               {"more"}{" "}
               <FaGreaterThan
                 style={{
                   marginLeft: "6px",
                 }}
               />
-            </div>
+            </div> */}
           </div>
           <div className="news-main-side-rigth">
             <div className="news-main-rigth-part1">
               <div className="main-news-heading">{t("bn")}</div>
               <div className="news-cards-area container3">
                 {console.log(upload.data)}
-              {upload?.data?.map((data) => {
-                let title = data?.title?.split(" ").join("-");
-                if (title) {
-                  return (
-                    <div className="news-card-items-area" style={{width: "250px"}} key={data?._id}>
-                      <NewsCard
-                        data={data}
-                        onPress={() =>
-                          navigation(`/details/${title}?id=${data._id}`)
-                        }
-                      />
-                    </div>
-                  );
-                } else {
-                  // Handle the case where title is undefined or null
-                  console.error("Title is undefined or null for data:", data);
-                  return null; // or handle it in a way that makes sense for your application
-                }
-              })}
+                {upload?.data?.map((data) => {
+                  let title = data?.title?.split(" ").join("-");
+                  if (title) {
+                    return (
+                      <div
+                        className="news-card-items-area"
+                        style={{ width: "250px" }}
+                        key={data?._id}
+                      >
+                        <NewsCard
+                          data={data}
+                          onPress={() =>
+                            navigation(`/details/${title}?id=${data._id}`)
+                          }
+                        />
+                      </div>
+                    );
+                  } else {
+                    // Handle the case where title is undefined or null
+                    console.error("Title is undefined or null for data:", data);
+                    return null; // or handle it in a way that makes sense for your application
+                  }
+                })}
               </div>
-              <div className="more-text">
+              {/* <div className="more-text">
                 {"more"}{" "}
                 <FaGreaterThan
                   style={{
                     marginLeft: "6px",
                   }}
                 />
-              </div>
+              </div> */}
             </div>
             <div className="news-main-rigth-part2">
               <a
@@ -763,25 +783,27 @@ const MainPage = () => {
         <div className="main-video-gallery-main-container container2 container3">
           <div className="main-page-video-heading2">{t("ph")}</div>
           {Article.length > 0 ? (
-  <Slider
-    className="main-video-gallery-imgs"
-    dots={true}
-    infinite={true}
-    slidesToShow={4}
-    slidesToScroll={1}
-  >
-    {Article.slice(0, 5).map((article, index) => (
-      <div key={index} className="slider-item">
-        <div className="image-container">
-          <img src={article.image} alt={article.title} />
-        </div>
-        <p style={{ textAlign: "center", color: "white" }}>{article.title}</p>
-      </div>
-    ))}
-  </Slider>
-) : (
-  <p>No articles available</p>
-)}
+            <Slider
+              className="main-video-gallery-imgs"
+              dots={true}
+              infinite={true}
+              slidesToShow={4}
+              slidesToScroll={1}
+            >
+              {Article.slice(0, 5).map((article, index) => (
+                <div key={index} className="slider-item">
+                  <div className="image-container">
+                    <img src={article.image} alt={article.title} />
+                  </div>
+                  <p style={{ textAlign: "center", color: "white" }}>
+                  {stripHtmlTags(article.discription)}
+                  </p>
+                </div>
+              ))}
+            </Slider>
+          ) : (
+            <p>No articles available</p>
+          )}
         </div>
       </div>
       {/* <Modal
