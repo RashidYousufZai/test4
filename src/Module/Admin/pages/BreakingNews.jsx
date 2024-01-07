@@ -101,7 +101,7 @@ const BreakingNews = () => {
       .then((user) => {
         console.log(user);
         setpublish(user.data[0].email);
-        setCategoryData(user.data[0].acsses);
+        // setCategoryData(user.data[0].acsses);
         console.log(user?.data[0]?.acsses);
         setRole(user.data[0].role);
         setUserCategoryOptions(user?.data[0]?.selectedKeywords || []);
@@ -455,6 +455,7 @@ const BreakingNews = () => {
                       }
                     />
                   </Col>
+                  {console.log(categoryData)}
 
                   {console.log(categoryData, userCategoryOptions)}
 

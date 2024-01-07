@@ -228,8 +228,8 @@ const DetailsPage = () => {
               className="details-main-related-new-area-cards"
               style={{ marginTop: 20, marginBottom: 20 }}
             >
-              {/* <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {socialedia
+              <div style={{ display: "flex", justifyContent: "space-between" }}>
+                {/* {socialedia
                   .filter((item) => item.status === "active")
                   .slice(0, 3)
                   .map((item) => (
@@ -247,8 +247,8 @@ const DetailsPage = () => {
                         <TwitterEmbed url={item?.link} width={325} height={310}/>
                       )}
                     </div>
-                  ))}
-              </div> */}
+                  ))} */}
+              </div>
 
               {/* <DetailsNewsCard />
               <DetailsNewsCard />

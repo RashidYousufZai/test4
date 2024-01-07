@@ -243,7 +243,7 @@ const Dashboard = () => {
       title: "News Id",
       dataIndex: "_id",
       key: "_id",
-      render: (text) => text.slice(0, 12),
+      render: (text) => text?.slice(0, 12),
       sorter: (a, b) => a._id.localeCompare(b._id),
     },
     {
