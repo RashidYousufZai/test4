@@ -34,7 +34,7 @@ const Header = () => {
 
         for (
           let index = 0;
-          index < (data.data.length <= 10 ? Number(data.data.length) : 10);
+          index < (data.data.length <= 50 ? Number(data.data.length) : 10);
           index++
         ) {
           const element = data.data[index];
