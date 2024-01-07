@@ -28,6 +28,7 @@ import { Col, Input, Modal, Row, Spin, message } from "antd";
 import { Loading } from "../../Context";
 import { useContext } from "react";
 import { API_URL } from "../../../API";
+import StoriesCard from "../../Components/MainPage/StoriesCard";
 const { TextArea } = Input;
 const DetailsPage = () => {
   const { pathname, search } = useLocation();
@@ -37,11 +38,13 @@ const DetailsPage = () => {
   const [isFav, setIsFav] = useState(false);
   const [data, setData] = useState(null);
   const [article, setArticle] = useState(null);
+  
 
   const [name, setName] = useState("");
   const [Email, setEmail] = useState("");
   const [comment, setComment] = useState("");
   const [userData, setUserData] = useState([]);
+  const [breakingNews, setbreakingNews] = useState([]);
   const [socialedia, setsocialedia] = useState([]);
   const { t } = useTranslation();
   const navigation = useNavigate();
@@ -63,6 +66,9 @@ const DetailsPage = () => {
 
   console.log(socialedia);
 
+  
+  
+
   useEffect(() => {
     console.log("heee");
     axios
@@ -82,7 +88,18 @@ const DetailsPage = () => {
         setLoading(false);
       });
   }, []);
-  console.log(article);
+  useEffect(() => {
+    axios
+      .get(
+        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=${article?.data[0]?.newsType}&status=online`
+      )
+      .then((data) => {
+        setbreakingNews(data?.data);
+        console.log(data);
+      })
+      .catch(() => {});
+  }, [])
+  console.log(breakingNews);
   const [data2, setData2] = useState([]);
   useEffect(() => {
     axios.get(`${API_URL}/comment?id=${query.get("id")}`).then((res) => {
@@ -313,12 +330,33 @@ const DetailsPage = () => {
             <div className="details-page-related-news-heading">{t("rn")}</div>
           </div>
           <div className="detail-page-relate-new-cards">
+            {/* <RelatedNewsCard /> */}
+            {/* <RelatedNewsCard />
             <RelatedNewsCard />
             <RelatedNewsCard />
             <RelatedNewsCard />
-            <RelatedNewsCard />
-            <RelatedNewsCard />
-            <RelatedNewsCard />
+            <RelatedNewsCard /> */}
+            {breakingNews?.map((data, index) => {
+                let title = data.title?.split(" ").join("-");
+
+                if (title) {
+                  return (
+                    <StoriesCard
+                      data={data}
+                      key={index}
+                      OnPress={() =>
+                        navigation(`/details/${title}?id=${data?._id}`)
+                      }
+                      image={data?.image}
+                      text={data?.title}
+                    />
+                  );
+                } else {
+                  console.error("Title is undefined or null for data:", data);
+                  return null;
+                }
+              })}
+            
           </div>
           <div className="details-page-latest-news">
             <div className="details-main-related-new-area-heading">
