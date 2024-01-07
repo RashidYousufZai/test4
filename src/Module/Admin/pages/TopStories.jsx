@@ -1,4 +1,14 @@
-import { Button, Card, Col, Input, Modal, Row, Select, Switch, message } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Switch,
+  message,
+} from "antd";
 import axios from "axios";
 import { useState, useRef, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
@@ -10,10 +20,11 @@ const TopStories = () => {
   const [slug, setSlug] = useState("");
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [type, setType] = useState("img");
-  const [Topic, setTopic] = useState("");
+  const [Topic, setTopic] = useState(null);
   const [category, setCategory] = useState("");
   const [subcategory, setSubcategory] = useState("");
   const [categoryData, setCategoryData] = useState([]);
+  const [catData, setCatData] = useState([]);
   const [userCategoryOptions, setUserCategoryOptions] = useState([]);
   const [categoryOptions, setCategoryOptions] = useState([]);
   const [desc, setdesc] = useState("");
@@ -32,8 +43,8 @@ const TopStories = () => {
   const [Update, setUpdate] = useState(false);
   const navigation = useNavigate();
 
-  console.log(categoryData)
-                  console.log(userCategoryOptions)
+  console.log(categoryData);
+  console.log(userCategoryOptions);
 
   const onTitleInput = (event) => {
     const newTitle = event.target.value;
@@ -53,6 +64,26 @@ const TopStories = () => {
   };
   useEffect(() => {
     axios
+      .get(`${API_URL}/content?type=category`)
+      .then((content) => {
+        console.log(content);
+        let arr = [];
+        for (let i = 0; i < content.data.length; i++) {
+          const element = content.data[i];
+          arr.push({
+            key: element._id,
+            value: element.text,
+            label: element.text,
+          });
+        }
+        setCatData(arr);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+
+    console.log(catData);
+    axios
       .get(`${API_URL}/user?id=${localStorage.getItem("id")}`)
       .then((user) => {
         console.log(user);
@@ -67,6 +98,9 @@ const TopStories = () => {
         console.log(err);
       });
     console.log(categoryData);
+  }, []);
+
+  useEffect(() => {
     axios.get(`${API_URL}/subcategory?category=${Topic}`).then((content) => {
       let arr = [];
       for (let i = 0; i < content.data.length; i++) {
@@ -79,7 +113,7 @@ const TopStories = () => {
       }
       setCategoryOptions(arr);
     });
-  }, []);
+  }, [Topic]);
 
   console.log(categoryOptions);
 
@@ -246,6 +280,8 @@ const TopStories = () => {
 
     setIsVerifyModalOpen(false);
   };
+
+  console.log(catData);
   return (
     <>
       <h1
@@ -401,24 +437,23 @@ const TopStories = () => {
                       }}
                       options={
                         role === "admin"
-                          ? categoryData.map((category) => ({
-                              value: category,
-                              label: category,
+                          ? catData.map((category) => ({
+                              value: category?.value,
+                              label: category?.label,
                             }))
                           : userCategoryOptions.map((category) => ({
-                              value: category,
-                              label: category,
+                              value: category?.value,
+                              label: category?.label,
                             }))
                       }
                     />
                   </Col>
-                  
 
-
+                  {console.log(userCategoryOptions)}
                   <Col span={12}>
                     <Select
                       placeholder="Sub Category"
-                      onChange={(e) => setSubcategory(e)} // Set subcategory, not category
+                      onChange={(e) => setSubcategory(e)}
                       value={subcategory}
                       style={{
                         width: "100%",

@@ -12,9 +12,47 @@ const Footer = () => {
   const { t } = useTranslation();
   const { loading, setLoading, setEffect, effect } = useContext(Loading);
   const [itsItem, setItsItem] = useState([]);
+  const [CategoryOptions, setCategoryOptions] = useState([]);
+  const [CategoryData, setCategoryData] = useState([]);
   const Navigation = useNavigate();
+
+  console.log(CategoryData, CategoryOptions)
+
   useEffect(() => {
-    setLoading(true);
+    axios
+      .get(`${API_URL}/content?type=category`)
+      .then((content) => {
+        let arr = [];
+        for (let i = 0; i < content.data.length; i++) {
+          const element = content.data[i];
+          arr.push({
+            key: element._id,
+            value: element.text,
+            label: element.text,
+          });
+        }
+        setCategoryData(arr);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }, []);
+
+  // useEffect(() => {
+  //   axios.get(`${API_URL}/subcategory?category=${selectedCategory}`).then((content) => {
+  //     let arr = [];
+  //     for (let i = 0; i < content.data.length; i++) {
+  //       const element = content.data[i];
+  //       arr.push({
+  //         key: element._id,
+  //         label: element.text,
+  //       });
+  //     }
+  //     setCategoryOptions(arr);
+  //   });
+  // }, [])
+
+  useEffect(() => {
     axios
       .get(`${API_URL}/content?type=category`)
       .then((data) => {
@@ -30,10 +68,9 @@ const Footer = () => {
           arr.push(element);
         }
         setItsItem(arr);
-        setLoading(false);
+        
       })
       .catch((err) => {
-        setLoading(false);
       });
   }, []);
   return (
@@ -91,7 +128,6 @@ const Footer = () => {
           <div className="footer-main">
             {itsItem.map((item) => {
               let arr = [];
-              // let item = [];
               axios
                 .get(`${API_URL}/subcategory?category=${item.text}`)
                 .then((data) => {
@@ -165,54 +201,54 @@ const Footer = () => {
           </div>
           <div className="footer-main">
             <div className="footer-item-box">
-              <div className="footer-heading">entertainment</div>
-              <div className="footer-items">
-                <div>movies</div>
-                <div>artist </div>
-                <div>television </div>
-                <div>stars </div>
-                <div>viral </div>
-              </div>
+              <div className="footer-heading">{CategoryData[5]?.label}</div>
+              {/* <div className="footer-items">
+                <div>{CategoryData[1]?.label}</div>
+                <div>{CategoryData[2]?.label} </div>
+                <div>{CategoryData[3]?.label} </div>
+                <div>{CategoryData[4]?.label} </div>
+                <div>{CategoryData[5]?.label} </div>
+              </div> */}
             </div>
             <div className="footer-item-box">
-              <div className="footer-heading">special</div>
-              <div className="footer-items">
+              <div className="footer-heading">{CategoryData[6]?.label}</div>
+              {/* <div className="footer-items">
                 <div>with us</div>
                 <div>on earth </div>
                 <div>independence </div>
                 <div>inside asia </div>
                 <div>return back </div>
-              </div>
+              </div> */}
             </div>
             <div className="footer-item-box">
-              <div className="footer-heading">whether</div>
-              <div className="footer-items">
+              <div className="footer-heading">{CategoryData[7]?.label}</div>
+              {/* <div className="footer-items">
                 <div>environment</div>
                 <div>wind tracker </div>
                 <div>wildlife </div>
                 <div>earth quick </div>
                 <div>videos </div>
-              </div>
+              </div> */}
             </div>
             <div className="footer-item-box">
-              <div className="footer-heading">extra</div>
-              <div className="footer-items">
+              <div className="footer-heading">{CategoryData[8]?.label}</div>
+              {/* <div className="footer-items">
                 <div>designs</div>
                 <div>membership </div>
                 <div>investment </div>
                 <div>bulletin </div>
                 <div>support us </div>
-              </div>
+              </div> */}
             </div>
             <div className="footer-item-box">
-              <div className="footer-heading">foreign</div>
-              <div className="footer-items">
+              <div className="footer-heading">{CategoryData[9]?.label}</div>
+              {/* <div className="footer-items">
                 <div>america</div>
                 <div>russia </div>
                 <div>bhutan</div>
                 <div>japan </div>
                 <div>nepal </div>
-              </div>
+              </div> */}
             </div>
           </div>
         </div>

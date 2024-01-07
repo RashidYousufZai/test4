@@ -22,7 +22,7 @@ const Upload = () => {
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
-  const [Topic, setTopic] = useState("");
+  const [Topic, setTopic] = useState(null);
   const [desc, setdesc] = useState("");
   const [reported, setreported] = useState("");
   const [publish, setpublish] = useState("");
@@ -133,7 +133,6 @@ const Upload = () => {
             label: element.text,
           });
         }
-        // let values = arr.map((item) => item?.label);
         setCategoryData(arr);
       })
       .catch((err) => {
@@ -142,6 +141,7 @@ const Upload = () => {
     axios
       .get(`${API_URL}/user?id=${localStorage.getItem("id")}`)
       .then((user) => {
+        console.log(user)
         setpublish(user.data[0].email);
         setRole(user.data[0].role);
         setuserCategoryData(user.data[0].selectedKeywords || []);
@@ -393,38 +393,38 @@ const Upload = () => {
                 </Col>
                 <Col span={18}>
                   <Row>
-                  <Col span={12}>
-                    <Select
-                      placeholder="Select Language"
-                      onChange={(e) => setType(e)}
-                      defaultValue="img"
-                      value={type}
-                      style={{
-                        width: "100%",
-                        marginBottom: "20px",
-                      }}
-                      options={[
-                        { value: "img", label: "Image" },
-                        { value: "vid", label: "Video" },
-                      ]}
-                    />
-                  </Col>
-                  <Col span={12}>
-                    <Select
-                      placeholder="Select Language"
-                      onChange={(e) => setLanguage(e)}
-                      value={Language}
-                      style={{
-                        width: "100%",
-                        marginBottom: "20px",
-                      }}
-                      options={[
-                        { value: "English", label: "English" },
-                        { value: "Urdu", label: "Urdu" },
-                        { value: "Hindi", label: "Hindi" },
-                      ]}
-                    />
-                  </Col>
+                    <Col span={12}>
+                      <Select
+                        placeholder="Select Language"
+                        onChange={(e) => setType(e)}
+                        defaultValue="img"
+                        value={type}
+                        style={{
+                          width: "100%",
+                          marginBottom: "20px",
+                        }}
+                        options={[
+                          { value: "img", label: "Image" },
+                          { value: "vid", label: "Video" },
+                        ]}
+                      />
+                    </Col>
+                    <Col span={12}>
+                      <Select
+                        placeholder="Select Language"
+                        onChange={(e) => setLanguage(e)}
+                        value={Language}
+                        style={{
+                          width: "100%",
+                          marginBottom: "20px",
+                        }}
+                        options={[
+                          { value: "English", label: "English" },
+                          { value: "Urdu", label: "Urdu" },
+                          { value: "Hindi", label: "Hindi" },
+                        ]}
+                      />
+                    </Col>
                   </Row>
                   <Col span={24}>
                     <Input
@@ -435,29 +435,30 @@ const Upload = () => {
                     <div style={{ marginBottom: "20px" }}></div>
                   </Col>
                   <Row>
-                  <Col span={12}>
-                    <Select
-                      value={Topic ? Topic : null}
-                      placeholder="Category"
-                      onChange={(e) => setTopic(e)}
-                      style={{ width: "100%" }}
-                      options={role === "admin" ? categoryData : userCategoryOptions}
-                    />
-                  </Col>
-                  <Col span={12}>
-                    <Select
-                      placeholder="Sub Category"
-                      value={subCategory ? subCategory : null}
-                      onChange={(e) => setSubCategory(e)}
-                      style={{ width: "100%" }}
-                      options={subCategoryData}
-                    />
-                    <div style={{ marginBottom: "20px" }}></div>
-                  </Col>
+                    <Col span={12}>
+                      <Select
+                        value={Topic ? Topic : null}
+                        placeholder="Category"
+                        onChange={(e) => setTopic(e)}
+                        style={{ width: "100%" }}
+                        options={
+                          role === "admin" ? categoryData : userCategoryOptions
+                        }
+                      />
+                    </Col>
+                    <Col span={12}>
+                      <Select
+                        placeholder="Sub Category"
+                        value={subCategory ? subCategory : null}
+                        onChange={(e) => setSubCategory(e)}
+                        style={{ width: "100%" }}
+                        options={subCategoryData}
+                      />
+                      <div style={{ marginBottom: "20px" }}></div>
+                    </Col>
                   </Row>
                 </Col>
               </Row>
-              
             )}
 
             {/* {onEdit ? (
@@ -534,102 +535,105 @@ const Upload = () => {
                   </div>
                 </Col>
               )}
-              {!onEdit && (<Col span={18}>
-                <Row gutter={20}>
-                  <Col span={12}>
-                    <Select
-                      // onChange={(e) => setValue(e)}
-                      placeholder="Select Language"
-                      onChange={(e) => setType(e)}
-                      defaultValue="img"
-                      value={type}
-                      style={{
-                        width: "100%",
-                        // height: 50,
-                        marginBottom: "20px",
-                      }}
-                      options={[
-                        {
-                          value: "img",
-                          label: "Image",
-                        },
-                        {
-                          value: "vid",
-                          label: "Video",
-                        },
-                      ]}
-                    />
-                  </Col>
-                  <Col span={12}>
-                    <Select
-                      // onChange={(e) => setValue(e)}
-                      placeholder="Select Language"
-                      onChange={(e) => setLanguage(e)}
-                      value={Language}
-                      style={{
-                        width: "100%",
-                        // height: 50,
-                        marginBottom: "20px",
-                      }}
-                      options={[
-                        {
-                          value: "English",
-                          label: "English",
-                        },
-                        {
-                          value: "Urdu",
-                          label: "Urdu",
-                        },
-                        {
-                          value: "Hindi",
-                          label: "Hindi",
-                        },
-                      ]}
-                    />
-                  </Col>
-                  <Col span={24}>
-                    <Input
-                      placeholder="Headline"
-                      value={title}
-                      onInput={onTitleInput}
-                    />
-                    <div style={{ marginBottom: "20px" }}></div>
-                  </Col>
-                  <Col span={12}>
-                    <Select
-                      value={Topic ? Topic : null}
-                      placeholder="Category"
-                      onChange={(e) => setTopic(e)}
-                      style={{
-                        width: "100%",
-                      }}
-                      options={
-                        role === "admin" ? categoryData : userCategoryOptions
-                      }
-                    />
-                  </Col>
-                  <Col span={12}>
-                    <Select
-                      placeholder="Sub Category"
-                      value={subCategory ? subCategory : null}
-                      onChange={(e) => setSubCategory(e)}
-                      style={{
-                        width: "100%",
-                      }}
-                      // dropdownRender={}
-                      options={subCategoryData}
-                    />
-                    <div style={{ marginBottom: "20px" }}></div>
-                  </Col>
-                  {/* <Col span={12}>
+              {!onEdit && (
+                <Col span={18}>
+                  <Row gutter={20}>
+                    <Col span={12}>
+                      <Select
+                        // onChange={(e) => setValue(e)}
+                        placeholder="Select Language"
+                        onChange={(e) => setType(e)}
+                        defaultValue="img"
+                        value={type}
+                        style={{
+                          width: "100%",
+                          // height: 50,
+                          marginBottom: "20px",
+                        }}
+                        options={[
+                          {
+                            value: "img",
+                            label: "Image",
+                          },
+                          {
+                            value: "vid",
+                            label: "Video",
+                          },
+                        ]}
+                      />
+                    </Col>
+                    <Col span={12}>
+                      <Select
+                        // onChange={(e) => setValue(e)}
+                        placeholder="Select Language"
+                        onChange={(e) => setLanguage(e)}
+                        value={Language}
+                        style={{
+                          width: "100%",
+                          // height: 50,
+                          marginBottom: "20px",
+                        }}
+                        options={[
+                          {
+                            value: "English",
+                            label: "English",
+                          },
+                          {
+                            value: "Urdu",
+                            label: "Urdu",
+                          },
+                          {
+                            value: "Hindi",
+                            label: "Hindi",
+                          },
+                        ]}
+                      />
+                    </Col>
+                    <Col span={24}>
+                      <Input
+                        placeholder="Headline"
+                        value={title}
+                        onInput={onTitleInput}
+                      />
+                      <div style={{ marginBottom: "20px" }}></div>
+                    </Col>
+                    <Col span={12}>
+                      <Select
+                        value={Topic ? Topic : null}
+                        placeholder="Category"
+                        onChange={(e) => setTopic(e)}
+                        style={{
+                          width: "100%",
+                        }}
+                        options={
+                          role === "admin" ? categoryData : userCategoryOptions
+                        }
+                      />
+                    </Col>
+                    {console.log(categoryData,userCategoryOptions)}
+                    <Col span={12}>
+                      <Select
+                        placeholder="Sub Category"
+                        value={subCategory ? subCategory : null}
+                        onChange={(e) => setSubCategory(e)}
+                        style={{
+                          width: "100%",
+                        }}
+                        // dropdownRender={}
+                        options={subCategoryData}
+                      />
+                      <div style={{ marginBottom: "20px" }}></div>
+                    </Col>
+                    {/* <Col span={12}>
                     <Input
                       placeholder="Topic"
                       value={Topic}
                       onChange={(e) => setTopic(e.target.value)}
                     />
                   </Col> */}
-                </Row>
-              </Col>)}
+                  </Row>
+                </Col>
+              )}
               {!onEdit && (
                 <Row gutter={12}>
                   {/* <Col span={12}>
@@ -737,9 +741,9 @@ const Upload = () => {
                       }
                     />
                   </Col> */}
-                {/* </>
-              )} */} 
-              
+              {/* </>
+              )} */}
+
               <Col span={24} style={{ marginTop: "20px" }}>
                 <JoditEditor
                   // config={{}}
@@ -833,13 +837,13 @@ const Upload = () => {
                 <div style={{ marginBottom: "20px" }}></div>
               </Col>
               <Col span={6}>
-                  <Input
-                    placeholder="Slug"
-                    value={slug}
-                    onChange={onSlugChange}
-                  />
-                  <div style={{ marginBottom: "20px" }}></div>
-                </Col>
+                <Input
+                  placeholder="Slug"
+                  value={slug}
+                  onChange={onSlugChange}
+                />
+                <div style={{ marginBottom: "20px" }}></div>
+              </Col>
               <Col span={6}>
                 <Input readOnly placeholder="Publish By" value={publish} />
                 <div style={{ marginBottom: "20px" }}></div>

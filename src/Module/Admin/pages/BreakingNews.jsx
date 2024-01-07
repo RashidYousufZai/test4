@@ -1,4 +1,14 @@
-import { Button, Card, Col, Input, Modal, Row, Select, Switch, message } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Input,
+  Modal,
+  Row,
+  Select,
+  Switch,
+  message,
+} from "antd";
 import axios from "axios";
 import { useState, useRef, useContext, useEffect } from "react";
 import JoditEditor from "jodit-react";
@@ -10,7 +20,7 @@ const BreakingNews = () => {
   const [slug, setSlug] = useState("");
   const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
   const [type, setType] = useState("img");
-  const [Topic, setTopic] = useState("");
+  const [Topic, setTopic] = useState(null);
   const [desc, setdesc] = useState("");
   const [reported, setreported] = useState("");
   const [subCategory, setSubCategory] = useState("");
@@ -34,6 +44,22 @@ const BreakingNews = () => {
   const { onEdit, setOnEdit, id } = useContext(onEditContext);
   const [Update, setUpdate] = useState(false);
   const navigation = useNavigate();
+
+  const handleCategoryChange = (selectedCategory) => {
+    // Fetch subcategories based on the selected category
+    axios.get(`${API_URL}/subcategory?category=${selectedCategory}`).then((content) => {
+      let arr = [];
+      for (let i = 0; i < content.data.length; i++) {
+        const element = content.data[i];
+        arr.push({
+          key: element._id,
+          label: element.text,
+        });
+      }
+      setCategoryOptions(arr);
+    });
+  };
+  
 
   const onTitleInput = (event) => {
     const newTitle = event.target.value;
@@ -65,7 +91,6 @@ const BreakingNews = () => {
             label: element.text,
           });
         }
-        // let values = arr.map((item) => item?.label);
         setCategoryData(arr);
       })
       .catch((err) => {
@@ -412,13 +437,16 @@ const BreakingNews = () => {
                     <Select
                       value={Topic || undefined}
                       placeholder="Category"
-                      onChange={(e) => setTopic(e)}
+                      onChange={(e) => {
+                        setTopic(e);
+                        handleCategoryChange(e); // Call the function to fetch subcategories
+                      }}
                       style={{ width: "100%" }}
                       options={
                         role === "admin"
                           ? categoryData.map((category) => ({
-                              value: category,
-                              label: category,
+                              value: category?.value,
+                              label: category?.label,
                             }))
                           : userCategoryOptions.map((category) => ({
                               value: category.value,
@@ -434,7 +462,7 @@ const BreakingNews = () => {
                     <Select
                       placeholder="Sub Category"
                       onChange={(value) => setSubcategory(value)}
-                      value={subcategory}
+                      value={subCategory ? subCategory : null}
                       style={{
                         width: "100%",
                         marginBottom: "20px",

@@ -37,6 +37,7 @@ const MainPage = () => {
   const [flashnews, setflashnews] = useState([]);
   const [Article, setArticle] = useState([]);
   const [video, setVideo] = useState([]);
+  const [upload, setUpload] = useState([]);
   const [latestNews, setLatestNews] = useState([]);
   const [ArticleTop, setArticleTop] = useState(null);
   const [isModal2Open, setIsModal2Open] = useState(true);
@@ -94,7 +95,16 @@ const MainPage = () => {
   useEffect(() => {
     axios
       .get(
-        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=topStories&status=online`
+        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=upload&status=online`
+      )
+      .then((data) => {
+        setUpload(data)
+        console.log(data)
+      })
+      .catch(() => {});
+      axios
+      .get(
+        `${API_URL}/article?pagenation=true&limit=6&type=img&upload=topStories&status=online`
       )
       .then((data) => {
         settopStories(data.data);
@@ -472,15 +482,26 @@ const MainPage = () => {
             <div className="news-main-rigth-part1">
               <div className="main-news-heading">{t("bn")}</div>
               <div className="news-cards-area container3">
-                <div className="news-card-items-area2 ">
-                  <NewsCard />
-                </div>
-                <div className="news-card-items-area2">
-                  <NewsCard />
-                </div>
-                <div className="news-card-items-area2">
-                  <NewsCard />
-                </div>
+                {console.log(upload.data)}
+              {upload?.data?.map((data) => {
+                let title = data?.title?.split(" ").join("-");
+                if (title) {
+                  return (
+                    <div className="news-card-items-area" style={{width: "250px"}} key={data?._id}>
+                      <NewsCard
+                        data={data}
+                        onPress={() =>
+                          navigation(`/details/${title}?id=${data._id}`)
+                        }
+                      />
+                    </div>
+                  );
+                } else {
+                  // Handle the case where title is undefined or null
+                  console.error("Title is undefined or null for data:", data);
+                  return null; // or handle it in a way that makes sense for your application
+                }
+              })}
               </div>
               <div className="more-text">
                 {"more"}{" "}
