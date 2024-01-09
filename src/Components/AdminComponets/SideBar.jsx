@@ -128,6 +128,8 @@ const SideBar = () => {
     "live",
     "poll",
     "stories",
+    "photogalery",
+    "videogalery",
   ];
 
   const sortedAccess = access.filter((route) => desiredOrder.includes(route));
@@ -177,10 +179,16 @@ const SideBar = () => {
             icon = <YourCreateUserIconComponent />;
             break;
           case "sociallink":
-              icon = <YourCreateUserIconComponent />;
-              break;
+            icon = <YourCreateUserIconComponent />;
+            break;
           case "content":
             icon = <YourContentIconComponent />;
+            break;
+          case "photogalery":
+            icon = <YourCreateUserIconComponent />;
+            break;
+          case "videogalery":
+            icon = <YourCreateUserIconComponent />;
             break;
           case "ads":
             icon = <YourAdsIconComponent />;

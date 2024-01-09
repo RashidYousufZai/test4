@@ -591,8 +591,8 @@
   width: 14px;
   height: 14px;
   border: 0px;
-  border-radius: 0 !important;
-  background-color: transparent !important;
+  border-radius: 50 !important;
+  background-color: white !important;
   margin-left: 10px;
   cursor: pointer;
 }

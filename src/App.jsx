@@ -25,6 +25,8 @@ import ReactGa from "react-ga";
 import { Spin } from "antd";
 import { LoadingOutlined } from "@ant-design/icons";
 import { API_URL } from "../API";
+import PhotoGalery from "./Module/ItemPage/PhotoGalery";
+import VideoGalery from "./Module/ItemPage/VideoGalery";
 
 const App = () => {
   const [isAdmin, setIsAdmin] = useState(false);
@@ -128,6 +130,8 @@ const App = () => {
                 }
               />
               <Route path="/details2/*" element={<DetailsPage2 />} />
+              <Route path="/photogalery" element={<PhotoGalery />} />
+              <Route path="/videogalery" element={<VideoGalery />} />
               <Route path="/itempage" element={<ItemPage />} />
               <Route path="/itempage2" element={<ItemPage2 />} />
               <Route path="/videos2" element={<VideoPage />} />
