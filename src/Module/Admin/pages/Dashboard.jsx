@@ -31,6 +31,7 @@ const Dashboard = () => {
   const [filterItem, setfilterItem] = useState("keyword");
   const [filterItemResponse, setfilterItemResponse] = useState([]);
   const [category, setcategory] = useState([]);
+  const [tags, settags] = useState([]);
   const [qusetion, setQuestion] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
@@ -59,6 +60,20 @@ const Dashboard = () => {
   }, []);
   console.log(category);
 
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/article/tags`)
+      .then((response) => {
+        const keywords = response?.data;
+        settags(keywords);
+      })
+      .catch((error) => {
+        // Handle errors
+        console.error("Error fetching keywords:", error);
+      });
+  }, []);
+  console.log(tags);
+
   const stripHtmlTags = (html) => {
     const doc = new DOMParser().parseFromString(html, "text/html");
     return doc.body.textContent || "";
@@ -69,7 +84,6 @@ const Dashboard = () => {
     setSelectedCategory("");
     location.reload();
   };
-
 
   // const handleStatusUpdate = (articleId, newStatus) => {
   //   // Make an API call to update the status
@@ -155,15 +169,27 @@ const Dashboard = () => {
     }
 
     let filter = "";
+    let keywordValue = "";
+
     for (let i = 0; i < filterItemResponse.length; i++) {
       const element = filterItemResponse[i];
+
       if (element.main === "date" && element.value) {
         filter = `${element.main}=${element.value.join(",")}&`;
       } else if (element.main === "newsType" && element.value === "all") {
+      } else if (element.main === "keyword") {
+        // Handle tags filter separately
+        keywordValue = element.value;
       } else {
         filter += `${element.main}=${element.value}&`;
       }
     }
+
+    // Add the keyword filter if a value is present
+    if (keywordValue) {
+      filter += `keyWord=${keywordValue}&`;
+    }
+
     console.log(filter);
 
     axios
@@ -637,25 +663,47 @@ const Dashboard = () => {
             />
           </Col>
           <Col style={{ marginTop: 10 }} span={6}>
-  <Select
-    placeholder="Category"
-    showSearch
-    onChange={(value) =>
-      setfilterItemResponse([
-        ...filterItemResponse,
-        { value, main: "category" },
-      ])
-    }
-    style={{ width: "100%" }}
-    value={selectedCategory || undefined}  // Ensure value is either undefined or null initially
-  >
-    {category.map((categoryItem) => (
-      <Select.Option key={categoryItem?._id} value={categoryItem?.text}>
-        {categoryItem?.text}
-      </Select.Option>
-    ))}
-  </Select>
-</Col>
+            <Select
+              placeholder="Category"
+              showSearch
+              onChange={(value) =>
+                setfilterItemResponse([
+                  ...filterItemResponse,
+                  { value, main: "category" },
+                ])
+              }
+              style={{ width: "100%" }}
+              value={selectedCategory || undefined} // Ensure value is either undefined or null initially
+            >
+              {category.map((categoryItem) => (
+                <Select.Option
+                  key={categoryItem?._id}
+                  value={categoryItem?.text}
+                >
+                  {categoryItem?.text}
+                </Select.Option>
+              ))}
+            </Select>
+          </Col>
+
+          <Col style={{ marginTop: 10 }} span={6}>
+            <Select
+              style={{ width: "100%" }}
+              placeholder="Select Tag"
+              onChange={(selectedTag) =>
+                setfilterItemResponse([
+                  ...filterItemResponse,
+                  { value: selectedTag, main: "keyword" },
+                ])
+              }
+            >
+              {tags.map((tag, index) => (
+                <Select.Option key={index} value={tag}>
+                  {tag}
+                </Select.Option>
+              ))}
+            </Select>
+          </Col>
 
           <Col style={{ marginTop: 10 }} span={6}>
             <Input
