@@ -57,31 +57,16 @@ const MainPage = () => {
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedTitle, setSelectedTitle] = useState("");
   const [Technology, setTechnology] = useState([]);
-  const [PhotoGalery, setPhotoGalery] = useState([]);
-  const [VideoGalery, setVideoGalery] = useState([]);
 
   console.log(Technology);
 
   const stripHtmlTags = (htmlString, wordLimit = 3) => {
-    const doc = new DOMParser().parseFromString(htmlString, "text/html");
+    const doc = new DOMParser().parseFromString(htmlString, 'text/html');
     const textContent = doc.body.textContent || "";
     const words = textContent.split(/\s+/);
     const truncatedContent = words.slice(0, wordLimit).join(" ");
     return truncatedContent;
   };
-
-  useEffect(() => {
-    axios
-      .get(`${API_URL}/galery`)
-      .then((response) => {
-        setPhotoGalery(response?.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching articles:", error);
-      });
-  }, []);
-
-  console.log(PhotoGalery);
 
   useEffect(() => {
     axios
@@ -107,19 +92,6 @@ const MainPage = () => {
 
     fetchStories();
   }, []);
-
-  useEffect(() => {
-    axios
-      .get(`${API_URL}/videogalery`)
-      .then((response) => {
-        setVideoGalery(response?.data);
-      })
-      .catch((error) => {
-        console.error("Error fetching articles:", error);
-      });
-  }, []);
-
-  console.log(VideoGalery);
 
   const sliderSettings = {
     dots: true,
@@ -301,10 +273,10 @@ const MainPage = () => {
                 <ImageCard
                   height="100%"
                   width="100%"
-                  img={breakingNews?.[3]?.image}
-                  text={breakingNews?.[3]?.title}
-                  title={breakingNews?.[3]?.title}
-                  id={breakingNews?.[3]?._id}
+                  img={breakingNews?.[0]?.image}
+                  text={breakingNews?.[0]?.title}
+                  title={breakingNews?.[0]?.title}
+                  id={breakingNews?.[0]?._id}
                 />
               </div>
               {console.log(breakingNews)}
@@ -324,20 +296,24 @@ const MainPage = () => {
                 />
               </div>
             </div>
-            <div
-              className="main-page-slider-setting"
-              style={{ marginTop: "10px" }}
-            >
-              {sliderItem === 1 ? (
+            <div className="main-page-slider-setting">
+              <ImageCard
+                img={breakingNews?.[3]?.image}
+                text={breakingNews?.[3]?.title}
+                title={breakingNews?.[3]?.title}
+                id={breakingNews?.[3]?._id}
+                height="350px"
+                width="100%"
+              />
+              {/* {sliderItem === 1 ? (
                 <div
                   style={{
-                    width: "100%",
-                    height: "350px",
+                    width: "400px",
+                    height: "180px",
                     background: "White",
                     marginTop: 10,
                     borderRadius: 10,
                     padding: 10,
-                    backgroundColor: "#f7f7f7",
                   }}
                 >
                   <div
@@ -404,15 +380,12 @@ const MainPage = () => {
                   </Radio.Group>
                 </div>
               ) : (
-                <ImageCard
-                  img={breakingNews?.[sliderItem]?.image}
-                  text={breakingNews?.[sliderItem]?.title}
-                  title={breakingNews?.[sliderItem]?.title}
-                  id={breakingNews?.[sliderItem]?._id}
-                  height="350px"
-                  width="100%"
+                <img
+                  src={sliderItems[sliderItem]}
+                  alt=""
+                  className={`slider-img ${showItem ? "show" : ""}`}
                 />
-              )}
+              )} */}
               <div className="main-page-slider-items">
                 {[0, 1, 2, 3].map((item) => (
                   <div
@@ -431,7 +404,6 @@ const MainPage = () => {
                 ))}
               </div>
             </div>
-
             {/* <div className="more-text">
               {"more"}{" "}
               <FaGreaterThan
@@ -475,7 +447,7 @@ const MainPage = () => {
             <div className="main-news-heading">{t("ln")}</div>
             <div className="news-cards-area container3">
               {console.log(breakingNews)}
-              {breakingNews.slice(0, 5).map((data) => {
+              {breakingNews.map((data) => {
                 let title = data?.title?.split(" ").join("-");
 
                 // Check if title is defined before rendering the NewsCard
@@ -527,7 +499,7 @@ const MainPage = () => {
               <div className="main-news-heading">{t("bn")}</div>
               <div className="news-cards-area container3">
                 {console.log(upload.data)}
-                {upload?.data?.slice(0, 3).map((data) => {
+                {upload?.data?.map((data) => {
                   let title = data?.title?.split(" ").join("-");
                   if (title) {
                     return (
@@ -602,8 +574,6 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-        {console.log(VideoGalery[0]?.images[0])}
-        {console.log(video[0])}
         <div className="main-page-videos-conatiner container2 container3">
           <div className="main-page-video-heading">{t("v")}</div>
           <div className="video-cards">
@@ -809,64 +779,24 @@ const MainPage = () => {
             </div>
           </div>
         </div>
-       { console.log(VideoGalery)}
-        <div className="main-video-gallery-main-container container2 container3">
-          <div className="main-page-video-heading2">{t("ph")}</div>
-          {VideoGalery.length > 0 ? (
-            <Slider
-              className="main-video-gallery-imgs"
-              dots={true}
-              infinite={true}
-              slidesToShow={2}
-              slidesToScroll={1}
-            >
-              {VideoGalery.map((article, index) => (
-                <div
-                  key={index}
-                  className="slider-item"
-                  onClick={() => {
-                    navigation(`/videogalery/`);
-                  }}
-                >
-                  <div className="image-container" style={{paddingBottom: "10px"}}>
-                    <video className="video-card-img" autoPlay={false}>
-                      <source src={article.images[0]} />
-                    </video>
-                  </div>
-                  <p style={{ textAlign: "center", color: "white" }}>
-                    {stripHtmlTags(article.title)}
-                  </p>
-                </div>
-              ))}
-            </Slider>
-          ) : (
-            <p>No articles available</p>
-          )}
-        </div>
 
         <div className="main-video-gallery-main-container container2 container3">
           <div className="main-page-video-heading2">{t("ph")}</div>
-          {PhotoGalery.length > 0 ? (
+          {Article.length > 0 ? (
             <Slider
               className="main-video-gallery-imgs"
               dots={true}
               infinite={true}
-              slidesToShow={2}
+              slidesToShow={4}
               slidesToScroll={1}
             >
-              {PhotoGalery.map((article, index) => (
-                <div
-                  key={index}
-                  className="slider-item"
-                  onClick={() => {
-                    navigation(`/photogalery/`);
-                  }}
-                >
+              {Article.slice(0, 5).map((article, index) => (
+                <div key={index} className="slider-item">
                   <div className="image-container">
-                    <img src={article.images[0]} alt={`${article.title}-0`} />
+                    <img src={article.image} alt={article.title} />
                   </div>
                   <p style={{ textAlign: "center", color: "white" }}>
-                    {stripHtmlTags(article.title)}
+                  {stripHtmlTags(article.discription)}
                   </p>
                 </div>
               ))}

@@ -46,7 +46,6 @@ const DetailsPage = () => {
   const [userData, setUserData] = useState([]);
   const [breakingNews, setbreakingNews] = useState([]);
   const [socialedia, setsocialedia] = useState([]);
-  const [ArticleData, setArticleData] = useState([]);
   const { t } = useTranslation();
   const navigation = useNavigate();
   const { loading, setLoading, effect } = useContext(Loading);
@@ -67,13 +66,6 @@ const DetailsPage = () => {
 
   console.log(socialedia);
 
-  useEffect(() => {
-    axios.get(`${API_URL}/article`).then((article) => {
-      setArticleData(article?.data);
-      console.log(ArticleData);
-    });
-  }, [axios]);
-  console.log(ArticleData);
   
   
 
@@ -237,7 +229,7 @@ const DetailsPage = () => {
               style={{ marginTop: 20, marginBottom: 20 }}
             >
               <div style={{ display: "flex", justifyContent: "space-between" }}>
-                {socialedia
+                {/* {socialedia
                   .filter((item) => item.status === "active")
                   .slice(0, 3)
                   .map((item) => (
@@ -255,7 +247,7 @@ const DetailsPage = () => {
                         <TwitterEmbed url={item?.link} width={325} height={310}/>
                       )}
                     </div>
-                  ))}
+                  ))} */}
               </div>
 
               {/* <DetailsNewsCard />
