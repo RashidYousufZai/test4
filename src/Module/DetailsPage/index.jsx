@@ -38,7 +38,6 @@ const DetailsPage = () => {
   const [isFav, setIsFav] = useState(false);
   const [data, setData] = useState(null);
   const [article, setArticle] = useState(null);
-  
 
   const [name, setName] = useState("");
   const [Email, setEmail] = useState("");
@@ -51,6 +50,8 @@ const DetailsPage = () => {
   const { loading, setLoading, effect } = useContext(Loading);
   const query = new URLSearchParams(search);
   console.log(query.get("id"));
+  console.log(data)
+
 
   const fetchData = async () => {
     try {
@@ -65,9 +66,6 @@ const DetailsPage = () => {
   }, []);
 
   console.log(socialedia);
-
-  
-  
 
   useEffect(() => {
     console.log("heee");
@@ -98,7 +96,7 @@ const DetailsPage = () => {
         console.log(data);
       })
       .catch(() => {});
-  }, [])
+  }, []);
   console.log(breakingNews);
   const [data2, setData2] = useState([]);
   useEffect(() => {
@@ -142,6 +140,11 @@ const DetailsPage = () => {
         message.success("Successfully Added");
       });
   };
+
+
+  
+
+  
   console.log(data?.publishBy);
   return (
     <>
@@ -160,7 +163,13 @@ const DetailsPage = () => {
             </div>
             <div className="details-page-top-item2">
               <AiOutlineCalendar size={22} style={{ marginRight: "10px" }} />
-              12|08|2023 12:15
+              {new Date(article?.data[0]?.updatedAt).toLocaleString('en-GB', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+  })}
             </div>
             <div className="details-page-top-item3">
               {isFav ? (
@@ -269,9 +278,7 @@ const DetailsPage = () => {
                   <FaRegComment style={{ marginRight: "10px" }} /> Comment
                 </div>
               </div>
-            ) : (
-              <></>
-            )}
+            ) : null}
             {data2.map(({ name, message }) => {
               return (
                 <div style={{ display: "flex", marginTop: "10px" }}>
@@ -337,26 +344,25 @@ const DetailsPage = () => {
             <RelatedNewsCard />
             <RelatedNewsCard /> */}
             {breakingNews?.map((data, index) => {
-                let title = data.title?.split(" ").join("-");
+              let title = data.title?.split(" ").join("-");
 
-                if (title) {
-                  return (
-                    <StoriesCard
-                      data={data}
-                      key={index}
-                      OnPress={() =>
-                        navigation(`/details/${title}?id=${data?._id}`)
-                      }
-                      image={data?.image}
-                      text={data?.title}
-                    />
-                  );
-                } else {
-                  console.error("Title is undefined or null for data:", data);
-                  return null;
-                }
-              })}
-            
+              if (title) {
+                return (
+                  <StoriesCard
+                    data={data}
+                    key={index}
+                    OnPress={() =>
+                      navigation(`/details/${title}?id=${data?._id}`)
+                    }
+                    image={data?.image}
+                    text={data?.title}
+                  />
+                );
+              } else {
+                console.error("Title is undefined or null for data:", data);
+                return null;
+              }
+            })}
           </div>
           <div className="details-page-latest-news">
             <div className="details-main-related-new-area-heading">

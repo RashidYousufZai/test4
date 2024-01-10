@@ -133,8 +133,13 @@ const SideBar = () => {
   const sortedAccess = access.filter((route) => desiredOrder.includes(route));
 
   const renderMenuItem = (key, route, to, icon) => {
+    const handleClick = () => {
+      if (route === "topstories" || route === "breakingnews" || route === "upload") {
+        window.location.reload(true);
+      }
+    };
     return (
-      <Menu.Item key={key} icon={icon}>
+      <Menu.Item key={key} icon={icon} onClick={handleClick}>
         <Link
           style={{
             textTransform: "uppercase",

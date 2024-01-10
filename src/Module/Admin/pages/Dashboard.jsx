@@ -141,7 +141,6 @@ const Dashboard = () => {
       if (element.main === "date" && element.value) {
         filter = `${element.main}=${element.value.join(",")}&`;
       } else if (element.main === "newsType" && element.value === "all") {
-        // Skip filtering for "All" option in newsType
       } else {
         filter += `${element.main}=${element.value}&`;
       }
@@ -348,14 +347,17 @@ const Dashboard = () => {
       title: "Content Type",
       key: "type",
       dataIndex: "type",
-      render: (_, { type }) => (
-        <>
+      render: (_, { type }) => {
+        let contentType = type === "img" ? "Text" : "Video";
+    
+        return (
           <Tag color={"gold"}>
-            {type == "img" ? "Image" : type == "vid" ? "Video" : "Image"}
+            {contentType}
           </Tag>
-        </>
-      ),
+        );
+      },
     },
+    
     {
       title: "Status",
       key: "status",

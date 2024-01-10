@@ -177,8 +177,8 @@ const TopStories = () => {
           image: image.data.image,
           type: type,
           comment: comment,
-          category: category, // Include category
-          subcategory: subcategory, // Include subcategory
+          category: category, 
+          subcategory: subcategory, 
         })
         .then((data) => {
           console.log(data.data);
@@ -192,6 +192,7 @@ const TopStories = () => {
               reportedBy: reported,
               publishBy: publish,
               newsType: newType,
+              comment: comment,
               image: image.data.image,
             },
             "dddata"
@@ -213,6 +214,8 @@ const TopStories = () => {
       setIsVerifyModalOpen(false);
     });
   };
+
+  console.log(comment)
   const onEditHandle = async () => {
     if (Update) {
       let formdata = new FormData();
@@ -232,6 +235,7 @@ const TopStories = () => {
             publishBy: publish,
             newsType: newType,
             image: dataImage,
+            comment: comment,
           })
           .then((data) => {
             console.log(data.data);
@@ -261,6 +265,7 @@ const TopStories = () => {
           topic: Topic,
           keyWord: keyword,
           image: dataImage,
+          comment: comment,
         })
         .then((data) => {
           console.log(data.data);

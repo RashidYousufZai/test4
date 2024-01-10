@@ -39,9 +39,9 @@ const ItemPage = () => {
     setTimeout(() => {
       axios
         .get(
-          `${API_URL}/article?category=${query.get(
-            "item"
-          )}&pagenation&subCategory=${query.get("sub") ? query.get("sub") : ""}`
+          `${API_URL}/article?category=${query.get("item")}&status=online${
+            query.get("sub") ? `&subCategory=${query.get("sub")}` : ""
+          }&pagenation`
         )
         .then((data) => {
           setData(data.data);

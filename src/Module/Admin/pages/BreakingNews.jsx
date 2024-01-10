@@ -195,6 +195,7 @@ const BreakingNews = () => {
               publishBy: publish,
               newsType: newType,
               image: image.data.image,
+              comment: comment,
             },
             "dddata"
           );
@@ -234,6 +235,7 @@ const BreakingNews = () => {
             publishBy: publish,
             newsType: newType,
             image: await image.data.image,
+            comment: comment,
           })
           .then((data) => {
             console.log(data.data);
@@ -263,6 +265,7 @@ const BreakingNews = () => {
           topic: Topic,
           keyWord: keyword,
           image: dataImage,
+          comment: comment,
         })
         .then((data) => {
           console.log(data.data);

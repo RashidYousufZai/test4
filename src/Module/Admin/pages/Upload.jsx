@@ -208,6 +208,7 @@ const Upload = () => {
           type: type,
           subCategory: subCategory,
           slug: slug,
+          comment: comment,
         })
         .then((data) => {
           console.log(data.data);
@@ -273,6 +274,7 @@ const Upload = () => {
             image: await image.data.image,
             type: type,
             subCategory: subCategory,
+            comment: comment,
           })
           .then((data) => {
             console.log(data.data);
@@ -302,6 +304,7 @@ const Upload = () => {
           topic: Topic,
           keyWord: keyword,
           image: dataImage,
+          comment: comment,
         })
         .then((data) => {
           console.log(data.data);
