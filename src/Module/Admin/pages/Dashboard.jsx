@@ -30,7 +30,9 @@ const Dashboard = () => {
   const [articleData, setArticleData] = useState([]);
   const [filterItem, setfilterItem] = useState("keyword");
   const [filterItemResponse, setfilterItemResponse] = useState([]);
+  const [category, setcategory] = useState([]);
   const [qusetion, setQuestion] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("");
   const [isModalDeleteOpen, setIsModalDeleteOpen] = useState(false);
   const [isModalReportedOpen, setIsModalReportedOpen] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
@@ -47,10 +49,27 @@ const Dashboard = () => {
   }, [axios]);
   console.log(articleData);
 
+  useEffect(() => {
+    axios
+      .get(`${API_URL}/content?type=category`)
+      .then((data) => {
+        setcategory(data?.data);
+      })
+      .catch((err) => {});
+  }, []);
+  console.log(category);
+
   const stripHtmlTags = (html) => {
     const doc = new DOMParser().parseFromString(html, "text/html");
     return doc.body.textContent || "";
   };
+
+  const resetFilters = () => {
+    setfilterItemResponse([]);
+    setSelectedCategory("");
+    location.reload();
+  };
+
 
   // const handleStatusUpdate = (articleId, newStatus) => {
   //   // Make an API call to update the status
@@ -349,15 +368,11 @@ const Dashboard = () => {
       dataIndex: "type",
       render: (_, { type }) => {
         let contentType = type === "img" ? "Text" : "Video";
-    
-        return (
-          <Tag color={"gold"}>
-            {contentType}
-          </Tag>
-        );
+
+        return <Tag color={"gold"}>{contentType}</Tag>;
       },
     },
-    
+
     {
       title: "Status",
       key: "status",
@@ -621,21 +636,27 @@ const Dashboard = () => {
               style={{ width: "100%" }}
             />
           </Col>
-          <Col span={6} style={{ marginTop: 10 }}>
-            <Input
-              onChange={(e) =>
-                setfilterItemResponse([
-                  ...filterItemResponse,
-                  {
-                    value: e.target.value,
-                    main: "category",
-                  },
-                ])
-              }
-              placeholder="category"
-              style={{ width: "100%" }}
-            />
-          </Col>
+          <Col style={{ marginTop: 10 }} span={6}>
+  <Select
+    placeholder="Category"
+    showSearch
+    onChange={(value) =>
+      setfilterItemResponse([
+        ...filterItemResponse,
+        { value, main: "category" },
+      ])
+    }
+    style={{ width: "100%" }}
+    value={selectedCategory || undefined}  // Ensure value is either undefined or null initially
+  >
+    {category.map((categoryItem) => (
+      <Select.Option key={categoryItem?._id} value={categoryItem?.text}>
+        {categoryItem?.text}
+      </Select.Option>
+    ))}
+  </Select>
+</Col>
+
           <Col style={{ marginTop: 10 }} span={6}>
             <Input
               onChange={(e) =>
