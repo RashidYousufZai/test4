@@ -134,7 +134,11 @@ const SideBar = () => {
 
   const renderMenuItem = (key, route, to, icon) => {
     const handleClick = () => {
-      if (route === "topstories" || route === "breakingnews" || route === "upload") {
+      if (
+        route === "topstories" ||
+        route === "breakingnews" ||
+        route === "upload"
+      ) {
         window.location.reload(true);
       }
     };
@@ -182,8 +186,8 @@ const SideBar = () => {
             icon = <YourCreateUserIconComponent />;
             break;
           case "sociallink":
-              icon = <YourCreateUserIconComponent />;
-              break;
+            icon = <YourCreateUserIconComponent />;
+            break;
           case "content":
             icon = <YourContentIconComponent />;
             break;
@@ -208,10 +212,12 @@ const SideBar = () => {
       })}
 
       <Menu.Item
-        style={{
-          position: "absolute",
-          bottom: 40,
-        }}
+        style={
+          {
+            // position: "absolute",
+            // bottom: 40,
+          }
+        }
         onClick={() => {
           localStorage.clear();
         }}
@@ -226,10 +232,12 @@ const SideBar = () => {
         </Link>
       </Menu.Item>
       <Menu.Item
-        style={{
-          position: "absolute",
-          bottom: 0,
-        }}
+        style={
+          {
+            // position: "absolute",
+            // bottom: 0,
+          }
+        }
         key="ten"
         icon={<RiAdminFill size={22} />}
       >
