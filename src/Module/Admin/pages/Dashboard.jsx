@@ -737,6 +737,19 @@ const Dashboard = () => {
               Filter
             </Button>
           </Col>
+          <Col style={{ marginTop: 10 }} span={4}>
+            <Button
+              style={{
+                width: "100%",
+                backgroundColor: "gray",
+                color: "white",
+              }}
+              type="secondry"
+              onClick={() => window.location.reload()}
+            >
+              Reset
+            </Button>
+          </Col>
           <Col span={24}>
             <Table
               scroll={{ x: 1300 }}

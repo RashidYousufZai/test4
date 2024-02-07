@@ -61,7 +61,7 @@ const MainPage = () => {
   console.log(Technology);
 
   const stripHtmlTags = (htmlString, wordLimit = 3) => {
-    const doc = new DOMParser().parseFromString(htmlString, 'text/html');
+    const doc = new DOMParser().parseFromString(htmlString, "text/html");
     const textContent = doc.body.textContent || "";
     const words = textContent.split(/\s+/);
     const truncatedContent = words.slice(0, wordLimit).join(" ");
@@ -112,10 +112,11 @@ const MainPage = () => {
       .catch(() => {});
     axios
       .get(
-        `${API_URL}/article?pagenation=true&limit=6&type=img&upload=topStories&status=online`
+        `${API_URL}/article?pagenation=true&type=img&newsType=topStories&status=online&limit=6`
       )
       .then((data) => {
         settopStories(data.data);
+        console.log(data.data);
       })
       .catch(() => {});
     axios
@@ -419,26 +420,28 @@ const MainPage = () => {
             </div>
             <div className="top-stories-all-cards">
               {console.log(topStories)}
-              {topStories?.map((data, index) => {
-                let title = data.title?.split(" ").join("-");
+              {topStories
+                ?.reverse() // Reverse the array
+                .map((data, index) => {
+                  let title = data.title?.split(" ").join("-");
 
-                if (title) {
-                  return (
-                    <StoriesCard
-                      data={data}
-                      key={index}
-                      OnPress={() =>
-                        navigation(`/details/${title}?id=${data?._id}`)
-                      }
-                      image={data?.image}
-                      text={data?.title}
-                    />
-                  );
-                } else {
-                  console.error("Title is undefined or null for data:", data);
-                  return null;
-                }
-              })}
+                  if (title) {
+                    return (
+                      <StoriesCard
+                        data={data}
+                        key={index}
+                        OnPress={() =>
+                          navigation(`/details/${title}?id=${data?._id}`)
+                        }
+                        image={data?.image}
+                        text={data?.title}
+                      />
+                    );
+                  } else {
+                    console.error("Title is undefined or null for data:", data);
+                    return null;
+                  }
+                })}
             </div>
           </div>
         </div>
@@ -796,7 +799,7 @@ const MainPage = () => {
                     <img src={article.image} alt={article.title} />
                   </div>
                   <p style={{ textAlign: "center", color: "white" }}>
-                  {stripHtmlTags(article.discription)}
+                    {stripHtmlTags(article.discription)}
                   </p>
                 </div>
               ))}
