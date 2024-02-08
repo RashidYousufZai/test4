@@ -18,6 +18,8 @@ import Poll from "../pages/Poll";
 import { API_URL } from "../../../../API";
 import FlashNews from "../pages/FlashNews";
 import VisualStories from "../pages/VisualStories";
+import PhotoGalery from "../pages/PhotoGalery";
+import VideoGalery from "../pages/VideoGalery";
 import SocialMediaLink from "../pages/SocialMediaLink";
 
 const { Sider, Content } = Layout;
@@ -111,6 +113,14 @@ const AdminLayout = () => {
                 return (
                   <Route key={path} path={path} element={<BreakingNews />} />
                 );
+              case "photogalery":
+                return (
+                  <Route key={path} path={path} element={<PhotoGalery />} />
+                );
+              case "videogalery":
+                return (
+                  <Route key={path} path={path} element={<VideoGalery />} />
+                );
               case "report":
                 return <Route key={path} path={path} element={<Report />} />;
               case "content":
@@ -132,9 +142,9 @@ const AdminLayout = () => {
               case "flashnews":
                 return <Route key={path} path={path} element={<FlashNews />} />;
               case "sociallink":
-                  return (
-                    <Route key={path} path={path} element={<SocialMediaLink />} />
-                  );
+                return (
+                  <Route key={path} path={path} element={<SocialMediaLink />} />
+                );
               case "creatuser":
                 return (
                   <Route key={path} path={path} element={<CreateUser />} />

@@ -19,7 +19,7 @@ const ItemPage = () => {
   const { pathname } = useLocation();
 
   const stripHtmlTags = (html) => {
-    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const doc = new DOMParser().parseFromString(html, "text/html");
     return doc.body.textContent || "";
   };
 

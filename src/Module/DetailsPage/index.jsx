@@ -50,8 +50,12 @@ const DetailsPage = () => {
   const { loading, setLoading, effect } = useContext(Loading);
   const query = new URLSearchParams(search);
   console.log(query.get("id"));
-  console.log(data)
+  console.log(data);
 
+  const validateEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
 
   const fetchData = async () => {
     try {
@@ -115,6 +119,11 @@ const DetailsPage = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
   const onAdd = () => {
+    if (!validateEmail(Email)) {
+      message.error("Please enter a valid email address");
+      return;
+    }
+
     setLoading2(true);
     console.log(
       { email: Email, name, message: comment, postId: data._id },
@@ -141,10 +150,6 @@ const DetailsPage = () => {
       });
   };
 
-
-  
-
-  
   console.log(data?.publishBy);
   return (
     <>
@@ -163,13 +168,13 @@ const DetailsPage = () => {
             </div>
             <div className="details-page-top-item2">
               <AiOutlineCalendar size={22} style={{ marginRight: "10px" }} />
-              {new Date(article?.data[0]?.updatedAt).toLocaleString('en-GB', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })}
+              {new Date(article?.data[0]?.updatedAt).toLocaleString("en-GB", {
+                day: "2-digit",
+                month: "2-digit",
+                year: "numeric",
+                hour: "2-digit",
+                minute: "2-digit",
+              })}
             </div>
             <div className="details-page-top-item3">
               {isFav ? (

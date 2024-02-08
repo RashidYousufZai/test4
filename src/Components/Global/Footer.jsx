@@ -16,7 +16,7 @@ const Footer = () => {
   const [CategoryData, setCategoryData] = useState([]);
   const Navigation = useNavigate();
 
-  console.log(CategoryData, CategoryOptions)
+  console.log(CategoryData, CategoryOptions);
 
   useEffect(() => {
     axios
@@ -68,11 +68,10 @@ const Footer = () => {
           arr.push(element);
         }
         setItsItem(arr);
-        
       })
-      .catch((err) => {
-      });
+      .catch((err) => {});
   }, []);
+
   return (
     !loading && (
       <div className="footer-main-container">

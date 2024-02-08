@@ -389,7 +389,7 @@ const Dashboard = () => {
     },
 
     {
-      title: "Content Type",
+      title: "Text / Video",
       key: "type",
       dataIndex: "type",
       render: (_, { type }) => {
