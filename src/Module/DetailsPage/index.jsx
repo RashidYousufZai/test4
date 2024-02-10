@@ -90,13 +90,17 @@ const DetailsPage = () => {
         setLoading(false);
       });
   }, []);
+
   useEffect(() => {
     axios
       .get(
-        `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=${article?.data[0]?.newsType}&status=online`
+        `${API_URL}/article?${article?.data[0]?.newsType}&status=online`
+        // `${API_URL}/article?pagenation=true&limit=6&type=img&newsType=${article?.data[0]?.newsType}&status=online`
       )
+
       .then((data) => {
         setbreakingNews(data?.data);
+        console.log(article?.data[0]?.newsType);
         console.log(data);
       })
       .catch(() => {});
@@ -349,23 +353,27 @@ const DetailsPage = () => {
             <RelatedNewsCard />
             <RelatedNewsCard /> */}
             {breakingNews?.map((data, index) => {
-              let title = data.title?.split(" ").join("-");
+              if (index < 4) {
+                let title = data.title?.split(" ").join("-");
 
-              if (title) {
-                return (
-                  <StoriesCard
-                    data={data}
-                    key={index}
-                    OnPress={() =>
-                      navigation(`/details/${title}?id=${data?._id}`)
-                    }
-                    image={data?.image}
-                    text={data?.title}
-                  />
-                );
+                if (title) {
+                  return (
+                    <StoriesCard
+                      data={data}
+                      key={index}
+                      OnPress={() =>
+                        navigation(`/details/${title}?id=${data?._id}`)
+                      }
+                      image={data?.image}
+                      text={data?.title}
+                    />
+                  );
+                } else {
+                  console.error("Title is undefined or null for data:", data);
+                  return null;
+                }
               } else {
-                console.error("Title is undefined or null for data:", data);
-                return null;
+                return null; // Return null for items beyond the first 4
               }
             })}
           </div>
